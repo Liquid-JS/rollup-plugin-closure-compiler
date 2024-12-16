@@ -1,6 +1,6 @@
 {
     "name": "@liquid-js/rollup-plugin-closure-compiler",
-    "version": "0.27.5",
+    "version": "0.27.6",
     "description": "Rollup + Google Closure Compiler",
     "files": [
         "dist"

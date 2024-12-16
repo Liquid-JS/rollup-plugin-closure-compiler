@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.27.6](https://github.com/Liquid-JS/rollup-plugin-closure-compiler/compare/v0.27.5...v0.27.6) (2024-12-16)
+
+
+### Bug Fixes
+
+* export types ([c2f7185](https://github.com/Liquid-JS/rollup-plugin-closure-compiler/commit/c2f718590f2569f596654340f903c84e6e7b801e))
+
 ### [0.27.5](https://github.com/Liquid-JS/rollup-plugin-closure-compiler/compare/v0.27.4...v0.27.5) (2024-12-16)
 
 
