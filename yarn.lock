@@ -489,7 +489,7 @@ __metadata:
     rimraf: "npm:^6.0.1"
     rollup: "npm:^4.28.1"
     standard-version: "npm:^9.5.0"
-    ts-node: "npm:^10.9.2"
+    ts-node-maintained: "npm:^10.9.4"
     typescript: "npm:^5.7.2"
     typescript-eslint: "npm:^8.18.0"
   peerDependencies:
@@ -6545,9 +6545,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-node@npm:^10.9.2":
-  version: 10.9.2
-  resolution: "ts-node@npm:10.9.2"
+"ts-node-maintained@npm:^10.9.4":
+  version: 10.9.4
+  resolution: "ts-node-maintained@npm:10.9.4"
   dependencies:
     "@cspotcode/source-map-support": "npm:^0.8.0"
     "@tsconfig/node10": "npm:^1.0.7"
@@ -6579,7 +6579,7 @@ __metadata:
     ts-node-script: dist/bin-script.js
     ts-node-transpile-only: dist/bin-transpile.js
     ts-script: dist/bin-script-deprecated.js
-  checksum: 10c0/5f29938489f96982a25ba650b64218e83a3357d76f7bede80195c65ab44ad279c8357264639b7abdd5d7e75fc269a83daa0e9c62fd8637a3def67254ecc9ddc2
+  checksum: 10c0/67907b021c813a0a71b2e04cd17e27082d33a84e090c6feef83259a78db6adbf6d08b5fbb61bed052b063b5e6cbd36c43dac899986d89bfd387e492c4630e20c
   languageName: node
   linkType: hard
 

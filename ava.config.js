@@ -3,7 +3,7 @@ export default () => ({
         'test/**/*.test.js'
     ],
     nodeArguments: [
-        '--loader=ts-node/esm'
+        '--import=ts-node-maintained/register/esm'
     ],
     environmentVariables: {
         TS_NODE_TRANSPILE_ONLY: 'true'
