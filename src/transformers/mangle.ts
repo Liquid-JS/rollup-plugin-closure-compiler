@@ -14,113 +14,107 @@
  * limitations under the License.
  */
 
-import * as crypto from 'crypto';
-import { asyncWalk as walk } from 'estree-walker';
-import { Program, BaseNode } from 'estree';
-import MagicString from 'magic-string';
-import { log } from '../debug.js';
-import { isBlockStatement, isVariableDeclarator, isIdentifier, isExportNamedDeclaration } from '../acorn.js';
-import { Range } from '../types.js';
+import * as crypto from 'crypto'
+import { BaseNode, Program } from 'estree'
+import { asyncWalk as walk } from 'estree-walker'
+import MagicString from 'magic-string'
+import { isBlockStatement, isExportNamedDeclaration, isIdentifier, isVariableDeclarator } from '../acorn.js'
+import { log } from '../debug.js'
+import { Range } from '../types.js'
 
-type OriginalSourcePath = string;
-type SourcePathId = string;
-type OriginalName = string;
-type MangledName = string;
+type OriginalSourcePath = string
+type SourcePathId = string
+type OriginalName = string
+type MangledName = string
 
 function createId(source: string): string {
-  const hash = crypto.createHash('sha1');
-  hash.update(source);
-  return 'f_' + hash.digest('hex');
+    const hash = crypto.createHash('sha1')
+    hash.update(source)
+    return 'f_' + hash.digest('hex')
 }
 
 function mangledValue(name: string, sourceId: string): string {
-  return `${name}_${sourceId}`;
+    return `${name}_${sourceId}`
 }
 
 export class Mangle {
-  private sourceToId: Map<OriginalSourcePath, SourcePathId> = new Map();
-  private idToSource: Map<SourcePathId, OriginalSourcePath> = new Map();
-  private nameToMangled: Map<OriginalName, MangledName> = new Map();
-  private mangledToName: Map<MangledName, OriginalName> = new Map();
+    private sourceToId: Map<OriginalSourcePath, SourcePathId> = new Map()
+    private idToSource: Map<SourcePathId, OriginalSourcePath> = new Map()
+    private nameToMangled: Map<OriginalName, MangledName> = new Map()
+    private mangledToName: Map<MangledName, OriginalName> = new Map()
 
-  public debug = () => {
-    log('mangle state', {
-      sourceToId: this.sourceToId,
-      idToSource: this.idToSource,
-      nameToMangled: this.nameToMangled,
-      mangledToName: this.mangledToName,
-    });
-  };
-
-  public sourceId = (source: string): string => {
-    let uuid = this.sourceToId.get(source);
-    if (!uuid) {
-      this.sourceToId.set(source, (uuid = createId(source)));
-      this.idToSource.set(uuid, source);
+    debug = () => {
+        log('mangle state', {
+            sourceToId: this.sourceToId,
+            idToSource: this.idToSource,
+            nameToMangled: this.nameToMangled,
+            mangledToName: this.mangledToName
+        })
     }
 
-    return uuid;
-  };
+    sourceId = (source: string): string => {
+        let uuid = this.sourceToId.get(source)
+        if (!uuid) {
+            this.sourceToId.set(source, (uuid = createId(source)))
+            this.idToSource.set(uuid, source)
+        }
 
-  public mangle = (name: string, sourceId: string): string => {
-    const mangled = mangledValue(name, sourceId);
-    const stored = this.nameToMangled.get(name);
-
-    if (stored && stored !== mangled) {
-      console.log('SetIdentifier for Mangled Name more than once', { name, sourceId });
-    } else {
-      this.nameToMangled.set(name, mangled);
-      this.mangledToName.set(mangled, name);
+        return uuid
     }
 
-    return mangled;
-  };
+    mangle = (name: string, sourceId: string): string => {
+        const mangled = mangledValue(name, sourceId)
+        const stored = this.nameToMangled.get(name)
 
-  public getMangledName = (originalName: string): string | undefined => {
-    return this.nameToMangled.get(originalName);
-  };
-
-  public getName = (maybeMangledName: string): string | undefined => {
-    return this.mangledToName.get(maybeMangledName);
-  };
-
-  public getSource = (sourceId: string): string | undefined => {
-    return this.idToSource.get(sourceId);
-  };
-
-  public execute = async (source: MagicString, program: Program): Promise<void> => {
-    const { getMangledName } = this;
-    const mangleable: Array<Set<string>> = [new Set([...this.nameToMangled.keys()])];
-    let insideNamedExport: boolean = false;
-
-    await walk(program, {
-      enter: async function (node: BaseNode) {
-        const currentlyRewriteable = mangleable[mangleable.length - 1];
-        if (isBlockStatement(node)) {
-          mangleable.push(new Set(currentlyRewriteable));
+        if (stored && stored !== mangled) {
+            console.log('SetIdentifier for Mangled Name more than once', { name, sourceId })
+        } else {
+            this.nameToMangled.set(name, mangled)
+            this.mangledToName.set(mangled, name)
         }
 
-        if (isExportNamedDeclaration(node)) {
-          insideNamedExport = true;
-        }
+        return mangled
+    }
 
-        if (!insideNamedExport && isVariableDeclarator(node) && isIdentifier(node.id)) {
-          currentlyRewriteable.delete(node.id.name);
-        }
+    getMangledName = (originalName: string): string | undefined => this.nameToMangled.get(originalName)
 
-        if (isIdentifier(node) && currentlyRewriteable.has(node.name)) {
-          const [start, end] = node.range as Range;
-          source.overwrite(start, end, getMangledName(node.name) || node.name);
-        }
-      },
-      leave: async function (node: BaseNode) {
-        if (isBlockStatement(node)) {
-          mangleable.pop();
-        }
-        if (isExportNamedDeclaration(node)) {
-          insideNamedExport = false;
-        }
-      },
-    });
-  };
+    getName = (maybeMangledName: string): string | undefined => this.mangledToName.get(maybeMangledName)
+
+    getSource = (sourceId: string): string | undefined => this.idToSource.get(sourceId)
+
+    execute = async (source: MagicString, program: Program): Promise<void> => {
+        const { getMangledName } = this
+        const mangleable: Array<Set<string>> = [new Set([...this.nameToMangled.keys()])]
+        let insideNamedExport: boolean = false
+
+        await walk(program, {
+            async enter(node: BaseNode) {
+                const currentlyRewriteable = mangleable[mangleable.length - 1]
+                if (isBlockStatement(node)) {
+                    mangleable.push(new Set(currentlyRewriteable))
+                }
+
+                if (isExportNamedDeclaration(node)) {
+                    insideNamedExport = true
+                }
+
+                if (!insideNamedExport && isVariableDeclarator(node) && isIdentifier(node.id)) {
+                    currentlyRewriteable.delete(node.id.name)
+                }
+
+                if (isIdentifier(node) && currentlyRewriteable.has(node.name)) {
+                    const [start, end] = node.range as Range
+                    source.overwrite(start, end, getMangledName(node.name) || node.name)
+                }
+            },
+            async leave(node: BaseNode) {
+                if (isBlockStatement(node)) {
+                    mangleable.pop()
+                }
+                if (isExportNamedDeclaration(node)) {
+                    insideNamedExport = false
+                }
+            }
+        })
+    }
 }

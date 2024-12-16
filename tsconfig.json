@@ -1,29 +1,28 @@
 {
-  "compileOnSave": true,
-  "compilerOptions": {
-    "lib": [
-      "esnext",
-    ],
-    "outDir": "transpile",
-    "sourceMap": true,
-    "moduleResolution": "node",
-    "target": "es2019",
-    "baseUrl": ".",
-    "allowJs": false,
-    "noUnusedLocals": true,
-    "strictNullChecks": true,
-    "noImplicitAny": true,
-    "noImplicitThis": true,
-    "alwaysStrict": true,
-    "declaration": true,
-    "module": "esnext",
-    "allowSyntheticDefaultImports": true,
-    "incremental": true,
-  },
-  "include": [
-    "./src/**/*.ts",
-    "./src/**/*.d.ts",
-    "./test/**/*.ts",
-    "./test/**/*.d.ts",
-  ]
+    "compileOnSave": true,
+    "compilerOptions": {
+        "lib": [
+            "esnext",
+        ],
+        "outDir": "dist",
+        "sourceMap": true,
+        "moduleResolution": "node",
+        "target": "es2019",
+        "baseUrl": ".",
+        "allowJs": true,
+        "noUnusedLocals": true,
+        "strictNullChecks": true,
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "alwaysStrict": true,
+        "declaration": true,
+        "module": "ESNext",
+        "allowSyntheticDefaultImports": true,
+        "incremental": true,
+    },
+    "include": [
+        "./src/**/*.ts",
+        "./src/**/*.d.ts",
+        "./test/**/*.js"
+    ]
 }

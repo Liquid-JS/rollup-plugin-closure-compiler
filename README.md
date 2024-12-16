@@ -7,7 +7,7 @@ Generally Closure Compiler will produce superior minification than other project
 ## Installation
 
 ```bash
-npm install @ampproject/rollup-plugin-closure-compiler --save-dev
+npm install @liquid-js/rollup-plugin-closure-compiler --save-dev
 ```
 
 ## Usage
@@ -16,7 +16,7 @@ Invoke Closure Compiler from your Rollup configuration.
 
 ```js
 // rollup.config.js
-import compiler from '@ampproject/rollup-plugin-closure-compiler';
+import compiler from '@liquid-js/rollup-plugin-closure-compiler';
 
 export default {
   input: 'main.js',
@@ -34,7 +34,7 @@ If you would like to provide additional [flags and options](https://github.com/g
 
 ```js
 // rollup.config.js
-import compiler from '@ampproject/rollup-plugin-closure-compiler';
+import compiler from '@liquid-js/rollup-plugin-closure-compiler';
 
 export default {
   input: 'main.js',
@@ -56,7 +56,7 @@ This plugin will modify the enable the `assume_function_wrapper` output option f
 
 ```js
 // rollup.config.js
-import compiler from '@ampproject/rollup-plugin-closure-compiler';
+import compiler from '@liquid-js/rollup-plugin-closure-compiler';
 
 export default {
   input: 'main.js',
@@ -74,7 +74,7 @@ If your Rollup configuration outputs an IIFE format bundle with a specified name
 
 ```js
 // rollup.config.js
-import compiler from '@ampproject/rollup-plugin-closure-compiler';
+import compiler from '@liquid-js/rollup-plugin-closure-compiler';
 
 export default {
   input: 'main.js',

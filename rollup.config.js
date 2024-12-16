@@ -14,33 +14,31 @@
  * limitations under the License.
  */
 
-import pkg from './package.json' assert { type: 'json' };
-import builtins from 'builtins';
-import copy from 'rollup-plugin-copy';
+import typescript from '@rollup/plugin-typescript'
+import builtins from 'builtins'
+import pkg from './package.json' with { type: 'json' }
 
 export default {
-  input: './transpile/index.js',
-  external: [
-    ...builtins(),
-    ...Object.keys(pkg.dependencies || {}),
-    ...Object.keys(pkg.peerDependencies || {}),
-  ],
-  output: [
-    {
-      file: './dist/index.mjs',
-      format: 'es',
-    },
-    {
-      file: './dist/index.cjs',
-      format: 'cjs',
-    },
-  ],
-  plugins: [
-    copy({
-      targets: [
-        { src: 'transpile/**/*.d.ts', dest: 'dist' },
-      ],
-      flatten: false,
-    }),
-  ],
-};
+    input: './src/index.ts',
+    external: [
+        ...builtins(),
+        ...Object.keys(pkg.dependencies || {}),
+        ...Object.keys(pkg.peerDependencies || {})
+    ],
+    output: [
+        {
+            file: './dist/index.mjs',
+            format: 'es'
+        },
+        {
+            file: './dist/index.cjs',
+            format: 'cjs'
+        }
+    ],
+    plugins: [
+        typescript({
+            declaration: true,
+            declarationDir: './dist/'
+        })
+    ]
+}

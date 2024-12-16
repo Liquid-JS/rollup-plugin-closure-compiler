@@ -14,48 +14,48 @@
  * limitations under the License.
  */
 
-import test from 'ava';
-import compiler from '../../transpile-tests/index.js';
-import * as rollup from 'rollup';
-import { promises as fsPromises } from 'fs';
-import { join } from 'path';
+import { promises as fsPromises } from 'fs'
+import { join } from 'path'
+import test from 'ava'
+import * as rollup from 'rollup'
+import compiler from '../../src/index.js'
 
 const closureFlags = {
-  default: {
-    warning_level: 'VERBOSE',
-    language_out: 'ECMASCRIPT5_STRICT',
-  },
-  advanced: {
-    warning_level: 'VERBOSE',
-    compilation_level: 'ADVANCED_OPTIMIZATIONS',
-    language_out: 'ECMASCRIPT5_STRICT',
-  },
-};
+    default: {
+        warning_level: 'VERBOSE',
+        language_out: 'ECMASCRIPT5_STRICT'
+    },
+    advanced: {
+        warning_level: 'VERBOSE',
+        compilation_level: 'ADVANCED_OPTIMIZATIONS',
+        language_out: 'ECMASCRIPT5_STRICT'
+    }
+}
 
 async function compile(name, option) {
-  const bundle = await rollup.rollup({
-    input: `test/${name}/fixtures/warnings.js`,
-    plugins: [compiler(closureFlags[option])],
-  });
+    const bundle = await rollup.rollup({
+        input: `test/${name}/fixtures/warnings.js`,
+        plugins: [compiler(closureFlags[option])]
+    })
 
-  return {
-    minified: await fsPromises.readFile(join(`test/${name}/fixtures/warnings.esm.${option}.js`), 'utf8'),
-    code: (
-      await bundle.generate({
-        format: 'es',
-        sourcemap: true,
-      })
-    ).code,
-  };
+    return {
+        minified: await fsPromises.readFile(join(`test/${name}/fixtures/warnings.esm.${option}.js`), 'utf8'),
+        code: (
+            await bundle.generate({
+                format: 'es',
+                sourcemap: true
+            })
+        ).code
+    }
 }
 
 Object.keys(closureFlags).forEach((option) => {
-  test(`provides warnings – es, ${option}`, async (t) => {
-    try {
-      await compile('error-reporting', option);
-      t.fail('successfully built files without warning about input');
-    } catch (e) {
-      t.pass();
-    }
-  });
-});
+    test(`provides warnings – es, ${option}`, async (t) => {
+        try {
+            await compile('error-reporting', option)
+            t.fail('successfully built files without warning about input')
+        } catch (_e) {
+            t.pass()
+        }
+    })
+})

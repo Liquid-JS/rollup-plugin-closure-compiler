@@ -14,46 +14,47 @@
  * limitations under the License.
  */
 
-import { ChunkTransform } from '../../transform.js';
-import { Range, TransformInterface } from '../../types.js';
-import MagicString from 'magic-string';
-import { ObjectExpression } from 'estree';
-import { parse, walk, isProperty } from '../../acorn.js';
+import { ObjectExpression } from 'estree'
+import MagicString from 'magic-string'
+import { isProperty, parse, walk } from '../../acorn.js'
+import { ChunkTransform } from '../../transform.js'
+import { Range, TransformInterface } from '../../types.js'
 
 /**
  * Closure Compiler will not transform computed keys with literal values back to the literal value.
  * e.g {[0]: 'value'} => {0: 'value'}
  *
  * This transform does so only if a computed key is a Literal, and thus easily known to be static.
+ *
  * @see https://astexplorer.net/#/gist/d2414b45a81db3a41ee6902bfd09947a/d7176ac33a2733e1a4b1f65ec3ac626e24f7b60d
  */
 export default class LiteralComputedKeys extends ChunkTransform implements TransformInterface {
-  public name = 'LiteralComputedKeysTransform';
+    name = 'LiteralComputedKeysTransform'
 
-  /**
-   * @param code source to parse, and modify
-   * @return modified input source with computed literal keys
-   */
-  public async post(fileName: string, source: MagicString): Promise<MagicString> {
-    const program = await parse(fileName, source.toString());
+    /**
+     * @param code source to parse, and modify
+     * @return modified input source with computed literal keys
+     */
+    async post(fileName: string, source: MagicString): Promise<MagicString> {
+        const program = await parse(fileName, source.toString())
 
-    walk.simple(program, {
-      ObjectExpression(node: ObjectExpression) {
-        for (const property of node.properties) {
-          if (isProperty(property) && property.computed && property.key.type === 'Literal') {
-            const [propertyStart]: Range = property.range as Range;
-            const [valueStart]: Range = property.value.range as Range;
+        walk.simple(program, {
+            ObjectExpression(node: ObjectExpression) {
+                for (const property of node.properties) {
+                    if (isProperty(property) && property.computed && property.key.type === 'Literal') {
+                        const [propertyStart]: Range = property.range as Range
+                        const [valueStart]: Range = property.value.range as Range
 
-            source.overwrite(
-              propertyStart,
-              valueStart,
-              `${property.key.value}${property.value.type !== 'FunctionExpression' ? ':' : ''}`,
-            );
-          }
-        }
-      },
-    });
+                        source.overwrite(
+                            propertyStart,
+                            valueStart,
+                            `${property.key.value}${property.value.type !== 'FunctionExpression' ? ':' : ''}`
+                        )
+                    }
+                }
+            }
+        })
 
-    return source;
-  }
+        return source
+    }
 }

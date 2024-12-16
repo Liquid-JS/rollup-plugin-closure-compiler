@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-import { generator } from '../generator.js';
+import { generator } from '../generator.js'
 
-generator('arrow-function', 'multiple-arguments');
+generator('arrow-function', 'multiple-arguments')

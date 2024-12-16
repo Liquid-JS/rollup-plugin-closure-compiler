@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-import { generator } from '../generator.js';
+import { generator } from '../generator.js'
 
-generator('literal-computed-keys', 'mixed-keys');
+generator('literal-computed-keys', 'mixed-keys')

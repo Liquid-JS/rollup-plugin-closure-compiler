@@ -28,5 +28,5 @@
  */
 
 export class Ebbinghaus {
-  public hashbang: string | null = null;
+    hashbang: string | null = null
 }

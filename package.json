@@ -1,104 +1,88 @@
 {
-  "name": "@ampproject/rollup-plugin-closure-compiler",
-  "version": "0.27.0",
-  "description": "Rollup + Google Closure Compiler",
-  "files": [
-    "dist"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ampproject/rollup-plugin-closure-compiler.git"
-  },
-  "author": "The AMP HTML Authors",
-  "engines": {
-    "node": ">=10"
-  },
-  "keywords": [
-    "rollup-plugin"
-  ],
-  "license": "Apache-2.0",
-  "type": "module",
-  "scripts": {
-    "pretest": "tsc -p tsconfig.test.json",
-    "test": "ava",
-    "precoverage": "yarn pretest && c8 ava",
-    "coverage": "c8 report --reporter=html",
-    "postcoverage": "sirv coverage/",
-    "build": "rimraf dist transpile transpile-tests && tsc -p tsconfig.json",
-    "postbuild": "rollup -c",
-    "release": "np --no-2fa --any-branch",
-    "prepublishOnly": "npm-run-all build"
-  },
-  "peerDependencies": {
-    "rollup": ">=1.27"
-  },
-  "dependencies": {
-    "@ampproject/remapping": "2.2.1",
-    "acorn": "8.11.3",
-    "acorn-walk": "8.3.2",
-    "estree-walker": "3.0.3",
-    "google-closure-compiler": "20210808.0.0",
-    "magic-string": "0.30.7",
-    "uuid": "9.0.1"
-  },
-  "devDependencies": {
-    "@types/estree": "^1.0.5",
-    "@types/google-closure-compiler": "^0.0.22",
-    "@types/node": "14.0.13",
-    "@types/uuid": "9.0.8",
-    "ava": "6.1.1",
-    "builtins": "5.0.1",
-    "c8": "9.1.0",
-    "codecov": "3.8.2",
-    "husky": "^9.0.11",
-    "lint-staged": "15.2.2",
-    "np": "https://github.com/pixelastic/np/tarball/c3ab2e3b053c7da0ce40a572ca1616273ac080f8",
-    "npm-run-all": "4.1.5",
-    "prettier": "3.2.5",
-    "rimraf": "5.0.5",
-    "rollup": "4.12.0",
-    "rollup-plugin-copy": "3.5.0",
-    "sirv-cli": "2.0.2",
-    "typescript": "5.3.3"
-  },
-  "lint-staged": {
-    "*.ts": [
-      "prettier --write"
-    ],
-    "*.test.js": [
-      "prettier --write"
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-push": "yarn npm-run-all test build",
-      "pre-commit": "lint-staged"
-    }
-  },
-  "ava": {
+    "name": "@liquid-js/rollup-plugin-closure-compiler",
+    "version": "0.27.1",
+    "description": "Rollup + Google Closure Compiler",
     "files": [
-      "test/**/*.test.js"
+        "dist"
     ],
-    "verbose": true
-  },
-  "prettier": {
-    "printWidth": 120,
-    "trailingComma": "all",
-    "parser": "typescript",
-    "singleQuote": true
-  },
-  "volta": {
-    "node": "16.6.1",
-    "yarn": "1.22.4"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "exports": {
-    ".": {
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.mjs",
-      "types": "./dist/indes.d.ts"
-    }
-  }
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Liquid-JS/rollup-plugin-closure-compiler.git"
+    },
+    "author": "The AMP HTML Authors",
+    "keywords": [
+        "rollup-plugin"
+    ],
+    "license": "Apache-2.0",
+    "type": "module",
+    "scripts": {
+        "postinstall": "husky",
+        "test": "ava",
+        "coverage": "c8 ava && c8 report --reporter=html",
+        "build": "rimraf dist && rollup -c",
+        "release": "git diff --exit-code && standard-version",
+        "prepublishOnly": "yarn build"
+    },
+    "peerDependencies": {
+        "google-closure-compiler": "^20240317.0.0",
+        "rollup": ">=4.28"
+    },
+    "dependencies": {
+        "@ampproject/remapping": "^2.3.0",
+        "acorn": "^8.14.0",
+        "acorn-walk": "^8.3.4",
+        "estree-walker": "^3.0.3",
+        "magic-string": "^0.30.17"
+    },
+    "devDependencies": {
+        "@commitlint/cli": "^19.6.1",
+        "@commitlint/config-conventional": "^19.6.0",
+        "@rollup/plugin-typescript": "^12.1.2",
+        "@stylistic/eslint-plugin": "^2.12.1",
+        "@types/estree": "^1.0.6",
+        "@types/google-closure-compiler": "^20231112.0.0",
+        "@types/node": "<23.0.0",
+        "ava": "^6.2.0",
+        "builtins": "^5.1.0",
+        "c8": "^10.1.3",
+        "codecov": "^3.8.3",
+        "eslint": "^9.17.0",
+        "eslint-plugin-import": "^2.31.0",
+        "eslint-plugin-jsdoc": "^50.6.1",
+        "eslint-plugin-prefer-arrow-functions": "^3.4.1",
+        "eslint-plugin-unused-imports": "^4.1.4",
+        "google-closure-compiler": "20210808.0.0",
+        "husky": "^9.1.7",
+        "lint-staged": "^15.2.11",
+        "npm-check-updates": "^17.1.11",
+        "npm-run-all": "^4.1.5",
+        "rimraf": "^6.0.1",
+        "rollup": "^4.28.1",
+        "standard-version": "^9.5.0",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.7.2",
+        "typescript-eslint": "^8.18.0"
+    },
+    "lint-staged": {
+        "*.ts": [
+            "eslint --fix"
+        ],
+        "*.js": [
+            "eslint --fix"
+        ],
+        "*.cjs": [
+            "eslint --fix"
+        ]
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "exports": {
+        ".": {
+            "require": "./dist/index.cjs",
+            "import": "./dist/index.mjs",
+            "types": "./dist/indes.d.ts"
+        }
+    },
+    "packageManager": "yarn@4.5.3"
 }

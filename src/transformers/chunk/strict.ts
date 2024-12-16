@@ -14,64 +14,66 @@
  * limitations under the License.
  */
 
-import { ChunkTransform } from '../../transform.js';
-import { Range, TransformInterface, PluginOptions } from '../../types.js';
-import { isESMFormat } from '../../options.js';
-import MagicString from 'magic-string';
-import { walk, parse } from '../../acorn.js';
-import { ExpressionStatement, SimpleLiteral } from 'estree';
-import { extname } from 'path';
-import { OutputOptions } from 'rollup';
+import { extname } from 'path'
+import { ExpressionStatement, SimpleLiteral } from 'estree'
+import MagicString from 'magic-string'
+import { OutputOptions } from 'rollup'
+import { parse, walk } from '../../acorn.js'
+import { isESMFormat } from '../../options.js'
+import { ChunkTransform } from '../../transform.js'
+import { PluginOptions, Range, TransformInterface } from '../../types.js'
 
 /**
  * Determines if Strict Mode should be removed from output.
+ *
  * @param pluginOptions
  * @param outputOptions
  * @param path
  */
 function shouldRemoveStrictModeDeclarations(
-  pluginOptions: PluginOptions,
-  outputOptions: OutputOptions,
-  path: string | undefined,
+    pluginOptions: PluginOptions,
+    outputOptions: OutputOptions,
+    path: string | undefined
 ): boolean {
-  if ('remove_strict_directive' in pluginOptions) {
-    const removeDirective = pluginOptions['remove_strict_directive'];
-    return removeDirective === undefined || removeDirective === true;
-  }
+    if ('remove_strict_directive' in pluginOptions) {
+        const removeDirective = pluginOptions['remove_strict_directive']
+        return removeDirective === undefined || removeDirective === true
+    }
 
-  const isESMOutput: boolean = !!(path && extname(path) === '.mjs');
-  return isESMFormat(outputOptions) || isESMOutput;
+    const isESMOutput: boolean = !!(path && extname(path) === '.mjs')
+    return isESMFormat(outputOptions) || isESMOutput
 }
 
 export default class StrictTransform extends ChunkTransform implements TransformInterface {
-  public name = 'StrictTransform';
+    name = 'StrictTransform'
 
-  /**
-   * When outputting an es module, runtimes automatically apply strict mode conventions.
-   * This means we can safely strip the 'use strict'; declaration from the top of the file.
-   * @param code source following closure compiler minification
-   * @return code after removing the strict mode declaration (when safe to do so)
-   */
-  public async post(fileName: string, source: MagicString): Promise<MagicString> {
-    const { file } = this.outputOptions;
+    /**
+     * When outputting an es module, runtimes automatically apply strict mode conventions.
+     * This means we can safely strip the 'use strict'; declaration from the top of the file.
+     *
+     * @param code source following closure compiler minification
+     * @return code after removing the strict mode declaration (when safe to do so)
+     */
+    async post(fileName: string, source: MagicString): Promise<MagicString> {
+        const { file } = this.outputOptions
 
-    if (shouldRemoveStrictModeDeclarations(this.pluginOptions, this.outputOptions, file)) {
-      const program = await parse(fileName, source.toString());
+        if (shouldRemoveStrictModeDeclarations(this.pluginOptions, this.outputOptions, file)) {
+            const program = await parse(fileName, source.toString())
 
-      walk.simple(program, {
-        ExpressionStatement(node: ExpressionStatement) {
-          const { type, value } = node.expression as SimpleLiteral;
-          const range: Range = node.range as Range;
+            walk.simple(program, {
+                ExpressionStatement(node: ExpressionStatement) {
+                    const { type, value } = node.expression as SimpleLiteral
+                    const range: Range = node.range as Range
 
-          if (type === 'Literal' && value === 'use strict') {
-            source.remove(...range);
-          }
-        },
-      });
+                    if (type === 'Literal' && value === 'use strict') {
+                        source.remove(...range)
+                    }
+                }
+            })
 
-      return source;
+            return source
+        }
+
+        return source
     }
-
-    return source;
-  }
 }

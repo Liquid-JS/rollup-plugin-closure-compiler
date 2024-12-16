@@ -15,131 +15,132 @@
  */
 
 import {
-  ExportNamedDeclaration,
-  ExportDefaultDeclaration,
-  Node,
-  ExpressionStatement,
-  MemberExpression,
-  Identifier,
-} from 'estree';
-import { ExportDetails, Range, ExportClosureMapping } from '../types.js';
-import { isFunctionDeclaration, isVariableDeclaration, isIdentifier, isClassDeclaration } from '../acorn.js';
-import { Mangle } from '../transformers/mangle.js';
+    ExportDefaultDeclaration,
+    ExportNamedDeclaration,
+    ExpressionStatement,
+    Identifier,
+    MemberExpression,
+    Node
+} from 'estree'
+import { isClassDeclaration, isFunctionDeclaration, isIdentifier, isVariableDeclaration } from '../acorn.js'
+import { Mangle } from '../transformers/mangle.js'
+import { ExportClosureMapping, ExportDetails, Range } from '../types.js'
 
 /**
  * Locally within exporting we always need a name
  * If value passed is not present in the mangler then use original name.
+ *
  * @param input
  * @param unmangle
  */
 function getName(input: string, unmangle?: Mangle['getName']): string {
-  if (unmangle) {
-    return unmangle(input) || input;
-  }
-  return input;
+    if (unmangle) {
+        return unmangle(input) || input
+    }
+    return input
 }
 
-export function NamedDeclaration(node: ExportNamedDeclaration, unmangle?: Mangle['getName']): Array<ExportDetails> {
-  const exportDetails: Array<ExportDetails> = [];
-  const range = node.range as Range;
-  const source: string | null = typeof node.source?.value === 'string' ? node.source.value : null;
-  const { specifiers, declaration } = node;
+export function NamedDeclaration(node: ExportNamedDeclaration, unmangle?: Mangle['getName']): ExportDetails[] {
+    const exportDetails: ExportDetails[] = []
+    const range = node.range as Range
+    const source: string | null = typeof node.source?.value === 'string' ? node.source.value : null
+    const { specifiers, declaration } = node
 
-  // NamedDeclarations either have specifiers or declarations.
-  if (specifiers.length > 0) {
-    for (const specifier of specifiers) {
-      const exported = getName(specifier.exported.name, unmangle);
-      exportDetails.push({
-        local: getName(specifier.local.name, unmangle),
-        exported,
-        type: ExportClosureMapping.NAMED_CONSTANT,
-        range,
-        source,
-      });
-    }
-
-    return exportDetails;
-  }
-
-  if (declaration) {
-    if (isFunctionDeclaration(declaration)) {
-      // Only default exports can be missing an identifier.
-      exportDetails.push({
-        local: getName((declaration.id as Identifier).name, unmangle),
-        exported: getName((declaration.id as Identifier).name, unmangle),
-        type: ExportClosureMapping.NAMED_FUNCTION,
-        range,
-        source,
-      });
-    }
-    if (isVariableDeclaration(declaration)) {
-      for (const eachDeclaration of declaration.declarations) {
-        if (isIdentifier(eachDeclaration.id)) {
-          exportDetails.push({
-            local: getName(eachDeclaration.id.name, unmangle),
-            exported: getName(eachDeclaration.id.name, unmangle),
-            type: ExportClosureMapping.NAMED_CONSTANT,
-            range,
-            source,
-          });
+    // NamedDeclarations either have specifiers or declarations.
+    if (specifiers.length > 0) {
+        for (const specifier of specifiers) {
+            const exported = getName((specifier.exported as any).name, unmangle)
+            exportDetails.push({
+                local: getName((specifier.local as any).name, unmangle),
+                exported,
+                type: ExportClosureMapping.NAMED_CONSTANT,
+                range,
+                source
+            })
         }
-      }
-    }
-    if (isClassDeclaration(declaration)) {
-      // Only default exports can be missing an identifier.
-      exportDetails.push({
-        local: getName((declaration.id as Identifier).name, unmangle),
-        exported: getName((declaration.id as Identifier).name, unmangle),
-        type: ExportClosureMapping.NAMED_CLASS,
-        range,
-        source,
-      });
-    }
-  }
 
-  return exportDetails;
+        return exportDetails
+    }
+
+    if (declaration) {
+        if (isFunctionDeclaration(declaration)) {
+            // Only default exports can be missing an identifier.
+            exportDetails.push({
+                local: getName((declaration.id as Identifier).name, unmangle),
+                exported: getName((declaration.id as Identifier).name, unmangle),
+                type: ExportClosureMapping.NAMED_FUNCTION,
+                range,
+                source
+            })
+        }
+        if (isVariableDeclaration(declaration)) {
+            for (const eachDeclaration of declaration.declarations) {
+                if (isIdentifier(eachDeclaration.id)) {
+                    exportDetails.push({
+                        local: getName(eachDeclaration.id.name, unmangle),
+                        exported: getName(eachDeclaration.id.name, unmangle),
+                        type: ExportClosureMapping.NAMED_CONSTANT,
+                        range,
+                        source
+                    })
+                }
+            }
+        }
+        if (isClassDeclaration(declaration)) {
+            // Only default exports can be missing an identifier.
+            exportDetails.push({
+                local: getName((declaration.id as Identifier).name, unmangle),
+                exported: getName((declaration.id as Identifier).name, unmangle),
+                type: ExportClosureMapping.NAMED_CLASS,
+                range,
+                source
+            })
+        }
+    }
+
+    return exportDetails
 }
 
 export function DefaultDeclaration(
-  defaultDeclaration: ExportDefaultDeclaration,
-  unmangle?: Mangle['getName'],
-): Array<ExportDetails> {
-  const { declaration } = defaultDeclaration;
+    defaultDeclaration: ExportDefaultDeclaration,
+    unmangle?: Mangle['getName']
+): ExportDetails[] {
+    const { declaration } = defaultDeclaration
 
-  if (declaration.type === 'Identifier' && declaration.name) {
-    return [
-      {
-        local: getName(declaration.name, unmangle),
-        exported: getName(declaration.name, unmangle),
-        type: ExportClosureMapping.NAMED_DEFAULT_FUNCTION,
-        range: defaultDeclaration.range as Range,
-        source: null,
-      },
-    ];
-  }
+    if (declaration.type === 'Identifier' && declaration.name) {
+        return [
+            {
+                local: getName(declaration.name, unmangle),
+                exported: getName(declaration.name, unmangle),
+                type: ExportClosureMapping.NAMED_DEFAULT_FUNCTION,
+                range: defaultDeclaration.range as Range,
+                source: null
+            }
+        ]
+    }
 
-  return [];
+    return []
 }
 
 export function NodeIsPreservedExport(node: Node): node is ExpressionStatement {
-  return (
-    node.type === 'ExpressionStatement' &&
-    node.expression.type === 'AssignmentExpression' &&
-    node.expression.left.type === 'MemberExpression' &&
-    node.expression.left.object.type === 'Identifier' &&
-    node.expression.left.object.name === 'window'
-  );
+    return (
+        node.type === 'ExpressionStatement' &&
+        node.expression.type === 'AssignmentExpression' &&
+        node.expression.left.type === 'MemberExpression' &&
+        node.expression.left.object.type === 'Identifier' &&
+        node.expression.left.object.name === 'window'
+    )
 }
 
 export function PreservedExportName(node: MemberExpression): string | null {
-  const { property } = node;
+    const { property } = node
 
-  if (property.type === 'Identifier') {
-    return property.name;
-  }
-  if (property.type === 'Literal' && typeof property.value === 'string') {
-    return property.value;
-  }
+    if (property.type === 'Identifier') {
+        return property.name
+    }
+    if (property.type === 'Literal' && typeof property.value === 'string') {
+        return property.value
+    }
 
-  return null;
+    return null
 }

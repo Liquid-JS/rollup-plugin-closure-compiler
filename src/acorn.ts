@@ -14,89 +14,89 @@
  * limitations under the License.
  */
 
+import * as acorn from 'acorn'
+import * as acornWalk from 'acorn-walk'
 import {
-  Program,
-  BaseNode,
-  Identifier,
-  ImportDeclaration,
-  VariableDeclarator,
-  BlockStatement,
-  ExportNamedDeclaration,
-  ExportDefaultDeclaration,
-  ExportAllDeclaration,
-  FunctionDeclaration,
-  VariableDeclaration,
-  ClassDeclaration,
-  ExportSpecifier,
-  Property,
-} from 'estree';
-import * as acorn from 'acorn';
-import { log } from './debug.js';
-import { writeTempFile } from './temp-file.js';
-import * as acornWalk from 'acorn-walk';
+    BaseNode,
+    BlockStatement,
+    ClassDeclaration,
+    ExportAllDeclaration,
+    ExportDefaultDeclaration,
+    ExportNamedDeclaration,
+    ExportSpecifier,
+    FunctionDeclaration,
+    Identifier,
+    ImportDeclaration,
+    Program,
+    Property,
+    VariableDeclaration,
+    VariableDeclarator
+} from 'estree'
+import { log } from './debug.js'
+import { writeTempFile } from './temp-file.js'
 
 export const walk = {
-  simple: acornWalk.simple,
-  ancestor: acornWalk.ancestor,
-};
+    simple: acornWalk.simple,
+    ancestor: acornWalk.ancestor
+}
 
 const DEFAULT_ACORN_OPTIONS: acorn.Options = {
-  ecmaVersion: 'latest',
-  sourceType: 'module',
-  preserveParens: false,
-  ranges: true,
-};
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    preserveParens: false,
+    ranges: true
+}
 
 export async function parse(fileName: string, source: string): Promise<Program> {
-  try {
-    return acorn.parse(source, DEFAULT_ACORN_OPTIONS) as unknown as Program;
-  } catch (e) {
-    log(`parse exception in ${fileName}`, `file://${await writeTempFile(source, '.js')}`);
-    throw e;
-  }
+    try {
+        return acorn.parse(source, DEFAULT_ACORN_OPTIONS) as unknown as Program
+    } catch (e) {
+        log(`parse exception in ${fileName}`, `file://${await writeTempFile(source, '.js')}`)
+        throw e
+    }
 }
 
 export function isIdentifier(node: BaseNode): node is Identifier {
-  return node.type === 'Identifier';
+    return node.type === 'Identifier'
 }
 export function isImportDeclaration(node: BaseNode): node is ImportDeclaration {
-  return node.type === 'ImportDeclaration';
+    return node.type === 'ImportDeclaration'
 }
 export function isImportExpression(node: BaseNode): boolean {
-  // @types/estree does not yet support 2020 addons to ECMA.
-  // This includes ImportExpression ... import("thing")
-  return node.type === 'ImportExpression';
+    // @types/estree does not yet support 2020 addons to ECMA.
+    // This includes ImportExpression ... import("thing")
+    return node.type === 'ImportExpression'
 }
 export function isVariableDeclarator(node: BaseNode): node is VariableDeclarator {
-  return node.type === 'VariableDeclarator';
+    return node.type === 'VariableDeclarator'
 }
 export function isBlockStatement(node: BaseNode): node is BlockStatement {
-  return node.type === 'BlockStatement';
+    return node.type === 'BlockStatement'
 }
 export function isProgram(node: BaseNode): node is Program {
-  return node.type === 'Program';
+    return node.type === 'Program'
 }
 export function isExportNamedDeclaration(node: BaseNode): node is ExportNamedDeclaration {
-  return node.type === 'ExportNamedDeclaration';
+    return node.type === 'ExportNamedDeclaration'
 }
 export function isExportDefaultDeclaration(node: BaseNode): node is ExportDefaultDeclaration {
-  return node.type === 'ExportDefaultDeclaration';
+    return node.type === 'ExportDefaultDeclaration'
 }
 export function isExportAllDeclaration(node: BaseNode): node is ExportAllDeclaration {
-  return node.type === 'ExportAllDeclaration';
+    return node.type === 'ExportAllDeclaration'
 }
 export function isFunctionDeclaration(node: BaseNode): node is FunctionDeclaration {
-  return node.type === 'FunctionDeclaration';
+    return node.type === 'FunctionDeclaration'
 }
 export function isVariableDeclaration(node: BaseNode): node is VariableDeclaration {
-  return node.type === 'VariableDeclaration';
+    return node.type === 'VariableDeclaration'
 }
 export function isClassDeclaration(node: BaseNode): node is ClassDeclaration {
-  return node.type === 'ClassDeclaration';
+    return node.type === 'ClassDeclaration'
 }
 export function isExportSpecifier(node: BaseNode): node is ExportSpecifier {
-  return node.type === 'ExportSpecifier';
+    return node.type === 'ExportSpecifier'
 }
 export function isProperty(node: BaseNode): node is Property {
-  return node.type === 'Property';
+    return node.type === 'Property'
 }

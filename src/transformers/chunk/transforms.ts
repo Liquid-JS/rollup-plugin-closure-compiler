@@ -14,40 +14,41 @@
  * limitations under the License.
  */
 
-import { OutputOptions, PluginContext, InputOptions, RenderedChunk, SourceDescription } from 'rollup';
-import HashbangRemoveTransform from './hashbang-remove.js';
-import HashbangApplyTransform from './hashbang-apply.js';
-import IifeTransform from './iife.js';
-import CJSTransform from './cjs.js';
-import LiteralComputedKeys from './literal-computed-keys.js';
-import ExportTransform from './exports.js';
-import ImportTransform from './imports.js';
-import StrictTransform from './strict.js';
-import ConstTransform from './const.js';
-import ASITransform from './asi.js';
-import { ChunkTransform, chunkLifecycle } from '../../transform.js';
-import { Mangle } from '../mangle.js';
-import { Ebbinghaus } from '../ebbinghaus.js';
-import { CompileOptions } from 'google-closure-compiler';
-import { pluckPluginOptions } from '../../options.js';
+import { CompileOptions } from 'google-closure-compiler'
+import { InputOptions, OutputOptions, PluginContext, RenderedChunk, SourceDescription } from 'rollup'
+import { pluckPluginOptions } from '../../options.js'
+import { ChunkTransform, chunkLifecycle } from '../../transform.js'
+import { Ebbinghaus } from '../ebbinghaus.js'
+import { Mangle } from '../mangle.js'
+import ASITransform from './asi.js'
+import CJSTransform from './cjs.js'
+import ConstTransform from './const.js'
+import ExportTransform from './exports.js'
+import HashbangApplyTransform from './hashbang-apply.js'
+import HashbangRemoveTransform from './hashbang-remove.js'
+import IifeTransform from './iife.js'
+import ImportTransform from './imports.js'
+import LiteralComputedKeys from './literal-computed-keys.js'
+import StrictTransform from './strict.js'
 
 const TRANSFORMS: Array<typeof ChunkTransform> = [
-  HashbangRemoveTransform,
-  // Acorn can parse content starting here
-  ConstTransform,
-  IifeTransform,
-  CJSTransform,
-  LiteralComputedKeys,
-  StrictTransform,
-  ExportTransform,
-  ImportTransform,
-  ASITransform,
-  // Acorn cannot parse content starting here.
-  HashbangApplyTransform,
-];
+    HashbangRemoveTransform,
+    // Acorn can parse content starting here
+    ConstTransform,
+    IifeTransform,
+    CJSTransform,
+    LiteralComputedKeys,
+    StrictTransform,
+    ExportTransform,
+    ImportTransform,
+    ASITransform,
+    // Acorn cannot parse content starting here.
+    HashbangApplyTransform
+]
 
 /**
  * Instantiate transform class instances for the plugin invocation.
+ *
  * @param context Plugin context to bind for each transform instance.
  * @param requestedCompileOptions Originally requested compile options from configuration.
  * @param mangler Mangle instance used for this transform instance.
@@ -57,45 +58,47 @@ const TRANSFORMS: Array<typeof ChunkTransform> = [
  * @return Instantiated transform class instances for the given entry point.
  */
 export function create(
-  context: PluginContext,
-  requestedCompileOptions: CompileOptions,
-  mangler: Mangle,
-  memory: Ebbinghaus,
-  inputOptions: InputOptions,
-  outputOptions: OutputOptions,
-): Array<ChunkTransform> {
-  const pluginOptions = pluckPluginOptions(requestedCompileOptions);
-  return TRANSFORMS.map(
-    (transform) => new transform(context, pluginOptions, mangler, memory, inputOptions, outputOptions),
-  );
+    context: PluginContext,
+    requestedCompileOptions: CompileOptions,
+    mangler: Mangle,
+    memory: Ebbinghaus,
+    inputOptions: InputOptions,
+    outputOptions: OutputOptions
+): ChunkTransform[] {
+    const pluginOptions = pluckPluginOptions(requestedCompileOptions)
+    return TRANSFORMS.map(
+        (transform) => new transform(context, pluginOptions, mangler, memory, inputOptions, outputOptions)
+    )
 }
 
 /**
  * Run each transform's `preCompilation` phase.
+ *
  * @param code
  * @param chunk
  * @param transforms
  * @return source code following `preCompilation`
  */
 export async function preCompilation(
-  source: string,
-  chunk: RenderedChunk,
-  transforms: Array<ChunkTransform>,
+    source: string,
+    chunk: RenderedChunk,
+    transforms: ChunkTransform[]
 ): Promise<SourceDescription> {
-  return await chunkLifecycle(chunk.fileName, 'PreCompilation', 'pre', source, transforms);
+    return chunkLifecycle(chunk.fileName, 'PreCompilation', 'pre', source, transforms)
 }
 
 /**
  * Run each transform's `postCompilation` phase.
+ *
  * @param code
  * @param chunk
  * @param transforms
  * @return source code following `postCompilation`
  */
 export async function postCompilation(
-  code: string,
-  chunk: RenderedChunk,
-  transforms: Array<ChunkTransform>,
+    code: string,
+    chunk: RenderedChunk,
+    transforms: ChunkTransform[]
 ): Promise<SourceDescription> {
-  return await chunkLifecycle(chunk.fileName, 'PostCompilation', 'post', code, transforms);
+    return chunkLifecycle(chunk.fileName, 'PostCompilation', 'post', code, transforms)
 }

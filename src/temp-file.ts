@@ -14,30 +14,29 @@
  * limitations under the License.
  */
 
-import * as path from 'path';
-import { tmpdir } from 'os';
-import { promises } from 'fs';
-import * as crypto from 'crypto';
-import { v4 } from 'uuid';
+import * as crypto from 'crypto'
+import { promises } from 'fs'
+import { tmpdir } from 'os'
+import * as path from 'path'
 
 export async function writeTempFile(
-  content: string,
-  extension: string = '',
-  stableName: boolean = true,
+    content: string,
+    extension: string = '',
+    stableName: boolean = true
 ): Promise<string> {
-  let hash: string;
+    let hash: string
 
-  if (stableName) {
-    hash = crypto
-      .createHash('sha1')
-      .update(content)
-      .digest('hex');
-  } else {
-    hash = v4();
-  }
-  const fullpath: string = path.join(tmpdir(), hash + extension);
-  await promises.mkdir(path.dirname(fullpath), { recursive: true });
-  await promises.writeFile(fullpath, content, 'utf-8');
+    if (stableName) {
+        hash = crypto
+            .createHash('sha1')
+            .update(content)
+            .digest('hex')
+    } else {
+        hash = crypto.randomUUID()
+    }
+    const fullpath: string = path.join(tmpdir(), hash + extension)
+    await promises.mkdir(path.dirname(fullpath), { recursive: true })
+    await promises.writeFile(fullpath, content, 'utf-8')
 
-  return fullpath;
+    return fullpath
 }

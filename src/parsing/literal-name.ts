@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { Literal, SimpleLiteral } from 'estree';
+import { Literal, SimpleLiteral } from 'estree'
 
 export function literalName(literal: Literal): string {
-  return (literal as SimpleLiteral).value as string;
+    return (literal as SimpleLiteral).value as string
 }

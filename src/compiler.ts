@@ -14,90 +14,86 @@
  * limitations under the License.
  */
 
-import gcc from 'google-closure-compiler';
-import { CompileOptions } from 'google-closure-compiler';
-const { compiler } = gcc;
+import gcc, { CompileOptions } from 'google-closure-compiler'
+const { compiler } = gcc
 //@ts-ignore
-import * as gccUtils from 'google-closure-compiler/lib/utils.js';
-const { getNativeImagePath, getFirstSupportedPlatform } = gccUtils;
-import { postCompilation } from './transformers/chunk/transforms.js';
-import { RenderedChunk } from 'rollup';
-import { ChunkTransform } from './transform.js';
+import * as gccUtils from 'google-closure-compiler/lib/utils.js'
+import { RenderedChunk } from 'rollup'
+import { ChunkTransform } from './transform.js'
+import { postCompilation } from './transformers/chunk/transforms.js'
+const { getNativeImagePath, getFirstSupportedPlatform } = gccUtils
 
 enum Platform {
-  NATIVE = 'native',
-  JAVA = 'java',
-  JAVASCRIPT = 'javascript',
+    NATIVE = 'native',
+    JAVA = 'java',
+    JAVASCRIPT = 'javascript'
 }
-const DEFAULT_PLATFORM_PRECEDENCE = [Platform.NATIVE, Platform.JAVA, Platform.JAVASCRIPT];
+const DEFAULT_PLATFORM_PRECEDENCE = [Platform.NATIVE, Platform.JAVA, Platform.JAVASCRIPT]
 
 /**
  * Splits user `platform` option from compiler options object
  * returns new object containing options and preferred platform.
- * @param {CompileOptions} content - compiler options object
- * @return {Object}
+ *
+ * @param content - compiler options object
+ * @return
  * @example in rollup.config.js
  *  compiler({
  *    platform: 'javascript',
  *  }),
  */
 function filterContent(content: CompileOptions): [CompileOptions, Platform] {
-  let platform: string = '';
-  if ('platform' in content && typeof content.platform === 'string') {
-    platform = content.platform;
-    delete content.platform;
-  }
-  return [content, platform as Platform];
+    let platform: string = ''
+    if ('platform' in content && typeof content.platform === 'string') {
+        platform = content.platform
+        delete content.platform
+    }
+    return [content, platform as Platform]
 }
 
 /**
  * Reorders platform preferences based on configuration.
- * @param {String} platformPreference - preferred platform string
- * @return {Array}
+ *
+ * @param platformPreference - preferred platform string
+ * @return
  */
-function orderPlatforms(platformPreference: Platform | string): Array<Platform> {
-  if (platformPreference === '') {
-    return DEFAULT_PLATFORM_PRECEDENCE;
-  }
+function orderPlatforms(platformPreference: Platform | string): Platform[] {
+    if (platformPreference === '') {
+        return DEFAULT_PLATFORM_PRECEDENCE
+    }
 
-  const index = DEFAULT_PLATFORM_PRECEDENCE.indexOf(platformPreference as Platform);
-  const newPlatformPreferences = DEFAULT_PLATFORM_PRECEDENCE.splice(index, 1);
-  return newPlatformPreferences.concat(DEFAULT_PLATFORM_PRECEDENCE);
+    const index = DEFAULT_PLATFORM_PRECEDENCE.indexOf(platformPreference as Platform)
+    const newPlatformPreferences = DEFAULT_PLATFORM_PRECEDENCE.splice(index, 1)
+    return newPlatformPreferences.concat(DEFAULT_PLATFORM_PRECEDENCE)
 }
 
 /**
  * Run Closure Compiler and `postCompilation` Transforms on input source.
+ *
  * @param compileOptions Closure Compiler CompileOptions, normally derived from Rollup configuration
  * @param transforms Transforms to run rollowing compilation
  * @return Promise<string> source following compilation and Transforms.
  */
-export default function (
-  compileOptions: CompileOptions,
-  chunk: RenderedChunk,
-  transforms: Array<ChunkTransform>,
-): Promise<string> {
-  return new Promise((resolve: (stdOut: string) => void, reject: (error: any) => void) => {
-    const [config, platform] = filterContent(compileOptions);
-    const instance = new compiler(config);
-    const firstSupportedPlatform = getFirstSupportedPlatform(orderPlatforms(platform));
+export default (compileOptions: CompileOptions, chunk: RenderedChunk, transforms: ChunkTransform[]): Promise<string> => new Promise((resolve: (stdOut: string) => void, reject: (error: any) => void) => {
+    const [config, platform] = filterContent(compileOptions)
+    const instance = new compiler(config)
+    const firstSupportedPlatform = getFirstSupportedPlatform(orderPlatforms(platform))
 
     if (firstSupportedPlatform !== Platform.JAVA) {
-      // TODO(KB): Provide feedback on this API. It's a little strange to nullify the JAR_PATH
-      // and provide a fake java path.
-      //@ts-ignore
-      instance.JAR_PATH = null;
-      instance.javaPath = getNativeImagePath();
+        // TODO(KB): Provide feedback on this API. It's a little strange to nullify the JAR_PATH
+        // and provide a fake java path.
+        //@ts-ignore
+        instance.JAR_PATH = null
+        instance.javaPath = getNativeImagePath()
     }
 
     instance.run(async (exitCode: number, code: string, stdErr: string) => {
-      if ('warning_level' in compileOptions && compileOptions.warning_level === 'VERBOSE' && stdErr !== '') {
-        reject(new Error(`Google Closure Compiler ${stdErr}`));
-      } else if (exitCode !== 0) {
-        reject(new Error(`Google Closure Compiler exit ${exitCode}: ${stdErr}`));
-      } else {
-        const postCompiled = await postCompilation(code, chunk, transforms);
-        resolve(postCompiled.code);
-      }
-    });
-  });
-}
+        if ('warning_level' in compileOptions && compileOptions.warning_level === 'VERBOSE' && stdErr !== '') {
+            reject(new Error(`Google Closure Compiler ${stdErr}`))
+        } else if (exitCode !== 0) {
+            reject(new Error(`Google Closure Compiler exit ${exitCode}: ${stdErr}`))
+        } else {
+            const postCompiled = await postCompilation(code, chunk, transforms)
+            resolve(postCompiled.code)
+        }
+    })
+})

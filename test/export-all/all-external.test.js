@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import test from 'ava';
-import { compile } from '../generator.js';
+import test from 'ava'
+import { compile } from '../generator.js'
 
 test.serial('export * is unsupported', async (t) => {
   try {
-    await compile('export-all', 'all-external', false, { default: {} }, 'default', 'esm');
+    await compile('export-all', 'all-external', false, { default: {} }, 'default', 'esm')
 
-    t.fail('expected error, but passed');
+    t.fail('expected error, but passed')
   } catch (e) {
-    t.is(e.message, 'Rollup Plugin Closure Compiler does not support export all syntax for externals.');
+    t.is(e.message, 'Rollup Plugin Closure Compiler does not support export all syntax for externals.')
   }
-});
+})

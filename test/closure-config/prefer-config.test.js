@@ -14,31 +14,31 @@
  * limitations under the License.
  */
 
-import test from 'ava';
-import options from '../../transpile-tests/options.js';
-import { generator } from '../generator.js';
+import test from 'ava'
+import options from '../../src/options.js'
+import { generator } from '../generator.js'
 
 test('platform unspecified is respected', async (t) => {
-  const typical = await options({}, {}, 'let x = 1;', []);
+    const typical = await options({}, {}, 'let x = 1;', [])
 
-  t.is(typical[0].platform, undefined);
-});
+    t.is(typical[0].platform, undefined)
+})
 
 test('platform javascript is respected', async (t) => {
-  const javascriptPlatform = await options(
-    {
-      platform: 'javascript',
-    },
-    {},
-    'let x = 1;',
-    [],
-  );
+    const javascriptPlatform = await options(
+        {
+            platform: 'javascript'
+        },
+        {},
+        'let x = 1;',
+        []
+    )
 
-  t.is(javascriptPlatform[0].platform, 'javascript');
-});
+    t.is(javascriptPlatform[0].platform, 'javascript')
+})
 
 generator('closure-config', 'prefer-config', undefined, undefined, {
-  javascript: {
-    platform: 'javascript',
-  },
-});
+    javascript: {
+        platform: 'javascript'
+    }
+})

@@ -6,3 +6,10 @@ dist/
 transpile/
 transpile-tests/
 coverage/*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.rollup.cache

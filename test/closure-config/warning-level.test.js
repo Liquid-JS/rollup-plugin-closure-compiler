@@ -14,47 +14,47 @@
  * limitations under the License.
  */
 
-import test from 'ava';
+import test from 'ava'
 import compile, {
-  ERROR_WARNINGS_ENABLED_LANGUAGE_OUT_UNSPECIFIED,
-  ERROR_WARNINGS_ENABLED_LANGUAGE_OUT_INVALID,
-} from '../../transpile-tests/options.js';
+    ERROR_WARNINGS_ENABLED_LANGUAGE_OUT_UNSPECIFIED,
+    ERROR_WARNINGS_ENABLED_LANGUAGE_OUT_INVALID
+} from '../../src/options.js'
 
 test('with no language out set, and warnings set to verbose... an error is returned', async (t) => {
-  try {
-    await compile(
-      {
-        warning_level: 'VERBOSE',
-      },
-      {
-        format: 'es',
-      },
-      'var x = 1;',
-      [],
-    );
+    try {
+        await compile(
+            {
+                warning_level: 'VERBOSE'
+            },
+            {
+                format: 'es'
+            },
+            'var x = 1;',
+            []
+        )
 
-    t.fail('compile completed without throwing an error.');
-  } catch (e) {
-    t.is(e.message, ERROR_WARNINGS_ENABLED_LANGUAGE_OUT_UNSPECIFIED);
-  }
-});
+        t.fail('compile completed without throwing an error.')
+    } catch (e) {
+        t.is(e.message, ERROR_WARNINGS_ENABLED_LANGUAGE_OUT_UNSPECIFIED)
+    }
+})
 
 test('with language out set to no_transpile, and warnings set to verbose... an error is returned', async (t) => {
-  try {
-    await compile(
-      {
-        warning_level: 'VERBOSE',
-        language_out: 'NO_TRANSPILE',
-      },
-      {
-        format: 'es',
-      },
-      'var x = 1;',
-      [],
-    );
+    try {
+        await compile(
+            {
+                warning_level: 'VERBOSE',
+                language_out: 'NO_TRANSPILE'
+            },
+            {
+                format: 'es'
+            },
+            'var x = 1;',
+            []
+        )
 
-    t.fail('compile completed without throwing an error.');
-  } catch (e) {
-    t.is(e.message, ERROR_WARNINGS_ENABLED_LANGUAGE_OUT_INVALID);
-  }
-});
+        t.fail('compile completed without throwing an error.')
+    } catch (e) {
+        t.is(e.message, ERROR_WARNINGS_ENABLED_LANGUAGE_OUT_INVALID)
+    }
+})

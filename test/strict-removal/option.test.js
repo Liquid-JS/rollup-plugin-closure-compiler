@@ -16,16 +16,11 @@
 
 import {
   generator,
-  DEFAULT_CLOSURE_OPTIONS,
-  PRETTY_PRINT_CLOSURE_OPTIONS,
-  ADVANCED_CLOSURE_OPTIONS,
-  ES5_STRICT_CLOSURE_OPTIONS,
-} from '../generator.js';
+  DEFAULT_CLOSURE_OPTIONS
+} from '../generator.js'
 
 const closureOptions = {
-  default: Object.assign({}, DEFAULT_CLOSURE_OPTIONS.default, {
-    remove_strict_directive: true,
-  }),
-};
+  default: { ...DEFAULT_CLOSURE_OPTIONS.default, remove_strict_directive: true}
+}
 
-generator('strict-removal', 'option', undefined, ['iife'], closureOptions);
+generator('strict-removal', 'option', undefined, ['iife'], closureOptions)

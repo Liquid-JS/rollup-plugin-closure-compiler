@@ -14,37 +14,38 @@
  * limitations under the License.
  */
 
-import { ChunkTransform } from '../../transform.js';
-import { Range } from '../../types.js';
-import { parse } from '../../acorn.js';
-import MagicString from 'magic-string';
+import MagicString from 'magic-string'
+import { parse } from '../../acorn.js'
+import { ChunkTransform } from '../../transform.js'
+import { Range } from '../../types.js'
 
 export default class ASITransform extends ChunkTransform {
-  public name = 'ASITransform';
+    name = 'ASITransform'
 
-  /**
-   * Small reduction in semi-colons, removing from end of block statements.
-   * @param source source following closure compiler minification
-   */
-  public async post(fileName: string, source: MagicString): Promise<MagicString> {
-    const code = source.toString();
-    const program = await parse(fileName, code);
+    /**
+     * Small reduction in semi-colons, removing from end of block statements.
+     *
+     * @param source source following closure compiler minification
+     */
+    async post(fileName: string, source: MagicString): Promise<MagicString> {
+        const code = source.toString()
+        const program = await parse(fileName, code)
 
-    if (program.body) {
-      const lastStatement = program.body[program.body.length - 1];
-      if (lastStatement) {
-        const [start, end] = lastStatement.range as Range;
-        if (lastStatement.type === 'EmptyStatement') {
-          source.remove(start, end);
-        } else {
-          const lastStatementSource = code.substring(start, end);
-          if (lastStatementSource.endsWith(';')) {
-            source.overwrite(start, end, code.substring(start, end - 1));
-          }
+        if (program.body) {
+            const lastStatement = program.body[program.body.length - 1]
+            if (lastStatement) {
+                const [start, end] = lastStatement.range as Range
+                if (lastStatement.type === 'EmptyStatement') {
+                    source.remove(start, end)
+                } else {
+                    const lastStatementSource = code.substring(start, end)
+                    if (lastStatementSource.endsWith(';')) {
+                        source.overwrite(start, end, code.substring(start, end - 1))
+                    }
+                }
+            }
         }
-      }
-    }
 
-    return source;
-  }
+        return source
+    }
 }

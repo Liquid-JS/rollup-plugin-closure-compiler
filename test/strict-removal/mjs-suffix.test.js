@@ -14,44 +14,44 @@
  * limitations under the License.
  */
 
-import test from 'ava';
-import * as transpiled from '../../transpile-tests/index.js';
-import * as rollup from 'rollup';
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from 'fs'
+import * as path from 'path'
+import test from 'ava'
+import * as rollup from 'rollup'
+import * as transpiled from '../../src/index.js'
 
-const { default: compiler } = transpiled;
+const { default: compiler } = transpiled
 
 test('remove strict declaration from .mjs input', async (t) => {
-  const bundle = await rollup.rollup({
-    input: 'test/strict-removal/fixtures/mjs-suffix.mjs',
-    plugins: [compiler()],
-    onwarn: (_) => null,
-  });
+    const bundle = await rollup.rollup({
+        input: 'test/strict-removal/fixtures/mjs-suffix.mjs',
+        plugins: [compiler()],
+        onwarn: (_) => null
+    })
 
-  const bundles = await bundle.generate({
-    format: 'iife',
-    name: 'modular',
-    sourcemap: false,
-    file: 'mjs-suffix.iife.default.mjs',
-  });
+    const bundles = await bundle.generate({
+        format: 'iife',
+        name: 'modular',
+        sourcemap: false,
+        file: 'mjs-suffix.iife.default.mjs'
+    })
 
-  const output = [];
-  if (bundles.output) {
-    for (const file in bundles.output) {
-      const minified = await fs.promises.readFile(
-        path.join('test/strict-removal/fixtures/mjs-suffix.iife.default.mjs'),
-        'utf8',
-      );
-      output.push({
-        minified,
-        code: bundles.output[file].code,
-      });
+    const output = []
+    if (bundles.output) {
+        for (const file in bundles.output) {
+            const minified = await fs.promises.readFile(
+                path.join('test/strict-removal/fixtures/mjs-suffix.iife.default.mjs'),
+                'utf8'
+            )
+            output.push({
+                minified,
+                code: bundles.output[file].code
+            })
+        }
     }
-  }
 
-  t.plan(output.length);
-  for (const result of output) {
-    t.is(result.code, result.minified);
-  }
-});
+    t.plan(output.length)
+    for (const result of output) {
+        t.is(result.code.replace(/\r\n/g, '\n'), result.minified.replace(/\r\n/g, '\n'))
+    }
+})

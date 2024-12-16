@@ -14,33 +14,33 @@
  * limitations under the License.
  */
 
-import test from 'ava';
-import * as transpiled from '../../transpile-tests/index.js';
-import * as rollup from 'rollup';
-import * as path from 'path';
+import * as path from 'path'
+import test from 'ava'
+import * as rollup from 'rollup'
+import * as transpiled from '../../src/index.js'
 
-const { default: compiler } = transpiled;
+const { default: compiler } = transpiled
 
 const options = {
-  externs: [path.resolve('test', 'provided-externs', 'fixtures', 'class.externs.js')],
-  compilation_level: 'ADVANCED',
-};
-const optionsCopy = { ...options };
+    externs: [path.resolve('test', 'provided-externs', 'fixtures', 'class.externs.js')],
+    compilation_level: 'ADVANCED'
+}
+const optionsCopy = { ...options }
 
 async function compile() {
-  const bundle = await rollup.rollup({
-    input: 'test/provided-externs/fixtures/class.js',
-    plugins: [compiler(options)],
-  });
+    const bundle = await rollup.rollup({
+        input: 'test/provided-externs/fixtures/class.js',
+        plugins: [compiler(options)]
+    })
 
-  await bundle.generate({
-    format: 'es',
-    sourcemap: true,
-  });
+    await bundle.generate({
+        format: 'es',
+        sourcemap: true
+    })
 }
 
-test(`building does not modify passed configuration`, async (t) => {
-  await compile();
+test('building does not modify passed configuration', async (t) => {
+    await compile()
 
-  t.deepEqual(options, optionsCopy);
-});
+    t.deepEqual(options, optionsCopy)
+})

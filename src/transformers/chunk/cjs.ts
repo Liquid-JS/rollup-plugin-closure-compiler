@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { ChunkTransform } from '../../transform.js';
-import { OutputOptions } from 'rollup';
+import { OutputOptions } from 'rollup'
+import { ChunkTransform } from '../../transform.js'
 
 const HEADER = `/**
 * @fileoverview Externs built via derived configuration from Rollup or input code.
@@ -28,7 +28,7 @@ const HEADER = `/**
 *   __esModule: boolean,
 * }}
 */
-var exports;`;
+var exports;`
 
 /**
  * This Transform will apply only if the Rollup configuration is for a cjs output.
@@ -36,13 +36,13 @@ var exports;`;
  * In order to preserve the __esModules boolean on an Object, this typedef needs to be present.
  */
 export default class CJSTransform extends ChunkTransform {
-  public name = 'CJSTransform';
+    name = 'CJSTransform'
 
-  public extern(options: OutputOptions): string | null {
-    if (options.format === 'cjs') {
-      return HEADER;
+    extern(options: OutputOptions): string | null {
+        if (options.format === 'cjs') {
+            return HEADER
+        }
+
+        return null
     }
-
-    return null;
-  }
 }

@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
-import test from 'ava';
-import { create } from '../../transpile-tests/transformers/chunk/transforms.js';
-import { defaults } from '../../transpile-tests/options.js';
-import { promises as fsPromises } from 'fs';
+import { promises as fsPromises } from 'fs'
+import test from 'ava'
+import { create } from '../../src/transformers/chunk/transforms.js'
+import { defaults } from '../../src/options.js'
 
 test('generate extern for cjs export pattern', async (t) => {
-  const externFixtureContent = await fsPromises.readFile('test/export-cjs/fixtures/export.extern.js', 'utf8');
-  const outputOptions = {
-    format: 'cjs',
-  };
-
-  const transforms = create({});
-  const options = await defaults(outputOptions, [], transforms);
-
-  for (const externFilePath of options.externs) {
-    const fileContent = await fsPromises.readFile(externFilePath, 'utf8');
-    if (fileContent === externFixtureContent) {
-      t.pass();
-      return;
+    const externFixtureContent = await fsPromises.readFile('test/export-cjs/fixtures/export.extern.js', 'utf8')
+    const outputOptions = {
+        format: 'cjs'
     }
-  }
-  t.fail('None of the externs match the expected format');
-});
+
+    const transforms = create({})
+    const options = await defaults(outputOptions, [], transforms)
+
+    for (const externFilePath of options.externs) {
+        const fileContent = await fsPromises.readFile(externFilePath, 'utf8')
+        if (fileContent.replace(/\r\n/g, '\n') === externFixtureContent.replace(/\r\n/g, '\n')) {
+            t.pass()
+            return
+        }
+    }
+    t.fail('None of the externs match the expected format')
+})

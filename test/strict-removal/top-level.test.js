@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-import { generator } from '../generator.js';
+import { generator } from '../generator.js'
 
-generator('strict-removal', 'top-level');
+generator('strict-removal', 'top-level')

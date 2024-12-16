@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { ChunkTransform } from '../../transform.js';
-import { TransformInterface } from '../../types.js';
-import MagicString from 'magic-string';
+import MagicString from 'magic-string'
+import { ChunkTransform } from '../../transform.js'
+import { TransformInterface } from '../../types.js'
 
 /**
  * Closure Compiler will not compile code that is prefixed with a hashbang (common to rollup output for CLIs).
@@ -24,21 +24,21 @@ import MagicString from 'magic-string';
  * This transform will remove the hashbang (if present) and ask Ebbinghaus to remember if for after compilation.
  */
 export default class HashbangRemoveTransform extends ChunkTransform implements TransformInterface {
-  public name = 'HashbangRemoveTransform';
+    name = 'HashbangRemoveTransform'
 
-  /**
-   * @param source MagicString of source to process post Closure Compilation.
-   */
-  public async pre(fileName: string, source: MagicString): Promise<MagicString> {
-    const stringified = source.trim().toString();
-    const match = /^#!.*/.exec(stringified);
+    /**
+     * @param source MagicString of source to process post Closure Compilation.
+     */
+    async pre(fileName: string, source: MagicString): Promise<MagicString> {
+        const stringified = source.trim().toString()
+        const match = /^#!.*/.exec(stringified)
 
-    if (!match) {
-      return source;
+        if (!match) {
+            return source
+        }
+
+        this.memory.hashbang = match[0]
+        source.remove(0, match[0].length)
+        return source
     }
-
-    this.memory.hashbang = match[0];
-    source.remove(0, match[0].length);
-    return source;
-  }
 }

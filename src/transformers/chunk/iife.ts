@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import { ChunkTransform } from '../../transform.js';
-import { OutputOptions } from 'rollup';
+import { OutputOptions } from 'rollup'
+import { ChunkTransform } from '../../transform.js'
 
 const HEADER = `/**
  * @fileoverview Externs built via derived configuration from Rollup or input code.
  * This extern contains the iife name so it does not get mangled at the top level.
  * @externs
  */
-`;
+`
 
 /**
  * This Transform will apply only if the Rollup configuration is for a iife output with a defined name.
@@ -31,13 +31,13 @@ const HEADER = `/**
  * This preserves the name after compilation since Closure now believes it to be a well known global.
  */
 export default class IifeTransform extends ChunkTransform {
-  public name = 'IifeTransform';
+    name = 'IifeTransform'
 
-  public extern(options: OutputOptions): string | null {
-    if (options.format === 'iife' && options.name) {
-      return HEADER + `window['${options.name}'] = ${options.name};\n`;
+    extern(options: OutputOptions): string | null {
+        if (options.format === 'iife' && options.name) {
+            return HEADER + `window['${options.name}'] = ${options.name};\n`
+        }
+
+        return null
     }
-
-    return null;
-  }
 }

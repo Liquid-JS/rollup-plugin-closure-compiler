@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-import { SourceTransform, sourceLifecycle } from '../../transform.js';
-import { Mangle } from '../mangle.js';
-import { PluginContext, InputOptions, OutputOptions, SourceDescription } from 'rollup';
-import { CompileOptions } from 'google-closure-compiler';
-import HashbangTransform from './hashbang.js';
-import { Ebbinghaus } from '../ebbinghaus.js';
+import { CompileOptions } from 'google-closure-compiler'
+import { InputOptions, OutputOptions, PluginContext, SourceDescription } from 'rollup'
+import { SourceTransform, sourceLifecycle } from '../../transform.js'
+import { Ebbinghaus } from '../ebbinghaus.js'
+import { Mangle } from '../mangle.js'
+import HashbangTransform from './hashbang.js'
 
-const TRANSFORMS: Array<typeof SourceTransform> = [HashbangTransform];
+const TRANSFORMS: Array<typeof SourceTransform> = [HashbangTransform]
 // Temporarily disabling many SourceTransforms, aligning for future release.
 // ImportTransform, ExportTransform
 
 /**
  * Instantiate transform class instances for the plugin invocation.
+ *
  * @param context Plugin context to bind for each transform instance.
  * @param requestedCompileOptions Originally requested compile options from configuration.
  * @param mangler Mangle instance used for this transform instance.
@@ -36,25 +37,26 @@ const TRANSFORMS: Array<typeof SourceTransform> = [HashbangTransform];
  * @return Instantiated transform class instances for the given entry point.
  */
 export const create = (
-  context: PluginContext,
-  requestedCompileOptions: CompileOptions,
-  mangler: Mangle,
-  memory: Ebbinghaus,
-  inputOptions: InputOptions,
-  outputOptions: OutputOptions,
-): Array<SourceTransform> =>
-  TRANSFORMS.map((transform) => new transform(context, {}, mangler, memory, inputOptions, outputOptions));
+    context: PluginContext,
+    requestedCompileOptions: CompileOptions,
+    mangler: Mangle,
+    memory: Ebbinghaus,
+    inputOptions: InputOptions,
+    outputOptions: OutputOptions
+): SourceTransform[] =>
+    TRANSFORMS.map((Transform) => new Transform(context, {}, mangler, memory, inputOptions, outputOptions))
 
 /**
  * Run each transform's `transform` lifecycle.
+ *
  * @param code
  * @param transforms
  * @return source code following `transform`
  */
 export async function transform(
-  source: string,
-  id: string,
-  transforms: Array<SourceTransform>,
+    source: string,
+    id: string,
+    transforms: SourceTransform[]
 ): Promise<SourceDescription> {
-  return await sourceLifecycle(id, 'Transform', source, transforms);
+    return sourceLifecycle(id, 'Transform', source, transforms)
 }

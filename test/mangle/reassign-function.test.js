@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { generator, DEFAULT_CLOSURE_OPTIONS } from '../generator.js';
+import { generator, DEFAULT_CLOSURE_OPTIONS } from '../generator.js'
 
 generator('mangle', 'reassign-arrow', undefined, undefined, {
-  ...DEFAULT_CLOSURE_OPTIONS,
-});
+  ...DEFAULT_CLOSURE_OPTIONS
+})

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { ChunkTransform } from '../../transform.js';
-import { TransformInterface } from '../../types.js';
-import MagicString from 'magic-string';
+import MagicString from 'magic-string'
+import { ChunkTransform } from '../../transform.js'
+import { TransformInterface } from '../../types.js'
 
 /**
  * Closure Compiler will not compile code that is prefixed with a hashbang (common to rollup output for CLIs).
@@ -24,17 +24,17 @@ import MagicString from 'magic-string';
  * This transform will restore the hashbang if Ebbinghaus knows it exists.
  */
 export default class HashbangApplyTransform extends ChunkTransform implements TransformInterface {
-  public name = 'HashbangApplyTransform';
+    name = 'HashbangApplyTransform'
 
-  /**
-   * @param source MagicString of source to process post Closure Compilation.
-   */
-  public async post(fileName: string, source: MagicString): Promise<MagicString> {
-    if (this.memory.hashbang === null) {
-      return source;
+    /**
+     * @param source MagicString of source to process post Closure Compilation.
+     */
+    async post(fileName: string, source: MagicString): Promise<MagicString> {
+        if (this.memory.hashbang === null) {
+            return source
+        }
+
+        source.prepend(this.memory.hashbang + '\n')
+        return source
     }
-
-    source.prepend(this.memory.hashbang + '\n');
-    return source;
-  }
 }

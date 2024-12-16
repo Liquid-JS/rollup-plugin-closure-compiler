@@ -14,72 +14,72 @@
  * limitations under the License.
  */
 
-import { CompileOptions } from 'google-closure-compiler';
-import { promises as fsPromises } from 'fs';
-import { OutputOptions, Plugin, InputOptions, PluginContext, RenderedChunk, TransformResult } from 'rollup';
-import compiler from './compiler.js';
-import options from './options.js';
-import { transform as sourceTransform, create as createSourceTransforms } from './transformers/source/transforms.js';
-import { preCompilation, create as createChunkTransforms } from './transformers/chunk/transforms.js';
-import { Mangle } from './transformers/mangle.js';
-import { Ebbinghaus } from './transformers/ebbinghaus.js';
-import { SourceTransform } from './transform.js';
+import { promises as fsPromises } from 'fs'
+import { CompileOptions } from 'google-closure-compiler'
+import { InputOptions, OutputOptions, Plugin, PluginContext, RenderedChunk, TransformResult } from 'rollup'
+import compiler from './compiler.js'
+import options from './options.js'
+import { SourceTransform } from './transform.js'
+import { create as createChunkTransforms, preCompilation } from './transformers/chunk/transforms.js'
+import { Ebbinghaus } from './transformers/ebbinghaus.js'
+import { Mangle } from './transformers/mangle.js'
+import { create as createSourceTransforms, transform as sourceTransform } from './transformers/source/transforms.js'
 
 export default function closureCompiler(requestedCompileOptions: CompileOptions = {}): Plugin {
-  const mangler: Mangle = new Mangle();
-  const memory: Ebbinghaus = new Ebbinghaus();
-  let inputOptions: InputOptions;
-  let context: PluginContext;
-  let sourceTransforms: Array<SourceTransform>;
+    const mangler: Mangle = new Mangle()
+    const memory: Ebbinghaus = new Ebbinghaus()
+    let inputOptions: InputOptions
+    let context: PluginContext
+    let sourceTransforms: SourceTransform[]
 
-  return {
-    name: 'closure-compiler',
-    options: (options) => (inputOptions = options),
-    buildStart() {
-      context = this;
-      sourceTransforms = createSourceTransforms(context, requestedCompileOptions, mangler, memory, inputOptions, {});
-      if (
-        'compilation_level' in requestedCompileOptions &&
-        requestedCompileOptions.compilation_level === 'ADVANCED_OPTIMIZATIONS' &&
-        Array.isArray(inputOptions.input)
-      ) {
-        context.warn('Code Splitting with Closure Compiler ADVANCED_OPTIMIZATIONS is not currently supported.');
-      }
-    },
-    transform: async (code: string, id: string): Promise<TransformResult> => {
-      if (sourceTransforms.length > 0) {
-        const output = await sourceTransform(code, id, sourceTransforms);
-        return output || null;
-      }
-      return null;
-    },
-    renderChunk: async (code: string, chunk: RenderedChunk, outputOptions: OutputOptions) => {
-      mangler.debug();
+    return {
+        name: 'closure-compiler',
+        options: (newOptions) => (inputOptions = newOptions),
+        buildStart() {
+            context = this
+            sourceTransforms = createSourceTransforms(context, requestedCompileOptions, mangler, memory, inputOptions, {})
+            if (
+                'compilation_level' in requestedCompileOptions &&
+                requestedCompileOptions.compilation_level === 'ADVANCED_OPTIMIZATIONS' &&
+                Array.isArray(inputOptions.input)
+            ) {
+                context.warn('Code Splitting with Closure Compiler ADVANCED_OPTIMIZATIONS is not currently supported.')
+            }
+        },
+        transform: async (code: string, id: string): Promise<TransformResult> => {
+            if (sourceTransforms.length > 0) {
+                const output = await sourceTransform(code, id, sourceTransforms)
+                return output || null
+            }
+            return null
+        },
+        renderChunk: async (code: string, chunk: RenderedChunk, outputOptions: OutputOptions) => {
+            mangler.debug()
 
-      const renderChunkTransforms = createChunkTransforms(
-        context,
-        requestedCompileOptions,
-        mangler,
-        memory,
-        inputOptions,
-        outputOptions,
-      );
-      const preCompileOutput = (await preCompilation(code, chunk, renderChunkTransforms)).code;
-      const [compileOptions, mapFile] = await options(
-        requestedCompileOptions,
-        outputOptions,
-        preCompileOutput,
-        renderChunkTransforms,
-      );
+            const renderChunkTransforms = createChunkTransforms(
+                context,
+                requestedCompileOptions,
+                mangler,
+                memory,
+                inputOptions,
+                outputOptions
+            )
+            const preCompileOutput = (await preCompilation(code, chunk, renderChunkTransforms)).code
+            const [compileOptions, mapFile] = await options(
+                requestedCompileOptions,
+                outputOptions,
+                preCompileOutput,
+                renderChunkTransforms
+            )
 
-      try {
-        return {
-          code: await compiler(compileOptions, chunk, renderChunkTransforms),
-          map: JSON.parse(await fsPromises.readFile(mapFile, 'utf8')),
-        };
-      } catch (error) {
-        throw error;
-      }
-    },
-  };
+            try {
+                return {
+                    code: await compiler(compileOptions, chunk, renderChunkTransforms),
+                    map: JSON.parse(await fsPromises.readFile(mapFile, 'utf8'))
+                }
+            } catch (error) {
+                throw error
+            }
+        }
+    }
 }

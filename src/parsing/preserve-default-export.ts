@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-import { ExpressionStatement, AssignmentExpression } from 'estree';
-import { ExportDetails, Range } from '../types.js';
-import MagicString from 'magic-string';
+import { AssignmentExpression, ExpressionStatement } from 'estree'
+import MagicString from 'magic-string'
+import { ExportDetails, Range } from '../types.js'
 
 export function PreserveDefault(
-  code: string,
-  source: MagicString,
-  ancestor: ExpressionStatement,
-  exportDetails: ExportDetails,
-  exportInline: boolean,
+    _code: string,
+    source: MagicString,
+    ancestor: ExpressionStatement,
+    _exportDetails: ExportDetails,
+    _exportInline: boolean
 ): boolean {
-  const assignmentExpression = ancestor.expression as AssignmentExpression;
-  const [leftStart]: Range = assignmentExpression.left.range as Range;
-  const [rightStart]: Range = assignmentExpression.right.range as Range;
+    const assignmentExpression = ancestor.expression as AssignmentExpression
+    const [leftStart]: Range = assignmentExpression.left.range as Range
+    const [rightStart]: Range = assignmentExpression.right.range as Range
 
-  source.overwrite(leftStart, rightStart, 'export default ');
+    source.overwrite(leftStart, rightStart, 'export default ')
 
-  return false;
+    return false
 }

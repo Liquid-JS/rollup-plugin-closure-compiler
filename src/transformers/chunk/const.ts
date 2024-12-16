@@ -14,34 +14,35 @@
  * limitations under the License.
  */
 
-import { ChunkTransform } from '../../transform.js';
-import { Range } from '../../types.js';
-import { parse, walk } from '../../acorn.js';
-import { VariableDeclaration } from 'estree';
-import MagicString from 'magic-string';
+import { VariableDeclaration } from 'estree'
+import MagicString from 'magic-string'
+import { parse, walk } from '../../acorn.js'
+import { ChunkTransform } from '../../transform.js'
+import { Range } from '../../types.js'
 
 export default class ConstTransform extends ChunkTransform {
-  public name = 'ConstTransform';
+    name = 'ConstTransform'
 
-  /**
-   * When outputting ES2017+ code there is neglagible differences between `const` and `let` for runtime performance.
-   * So, we replace all usages of `const` with `let` to enable more variable folding.
-   * @param code source following closure compiler minification
-   * @return code after removing the strict mode declaration (when safe to do so)
-   */
-  public async pre(fileName: string, source: MagicString): Promise<MagicString> {
-    const code = source.toString();
-    const program = await parse(fileName, code);
+    /**
+     * When outputting ES2017+ code there is neglagible differences between `const` and `let` for runtime performance.
+     * So, we replace all usages of `const` with `let` to enable more variable folding.
+     *
+     * @param code source following closure compiler minification
+     * @return code after removing the strict mode declaration (when safe to do so)
+     */
+    async pre(fileName: string, source: MagicString): Promise<MagicString> {
+        const code = source.toString()
+        const program = await parse(fileName, code)
 
-    walk.simple(program, {
-      VariableDeclaration(node: VariableDeclaration) {
-        const [start, end]: Range = node.range as Range;
-        if (node.kind === 'const') {
-          source.overwrite(start, end, code.substring(start, end).replace('const', 'let'));
-        }
-      },
-    });
+        walk.simple(program, {
+            VariableDeclaration(node: VariableDeclaration) {
+                const [start, end]: Range = node.range as Range
+                if (node.kind === 'const') {
+                    source.overwrite(start, end, code.substring(start, end).replace('const', 'let'))
+                }
+            }
+        })
 
-    return source;
-  }
+        return source
+    }
 }
