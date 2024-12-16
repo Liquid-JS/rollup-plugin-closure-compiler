@@ -16,7 +16,7 @@
     "license": "Apache-2.0",
     "type": "module",
     "scripts": {
-        "postinstall": "husky",
+        "prepare": "husky",
         "test": "ava",
         "coverage": "c8 ava && c8 report --reporter=html",
         "build": "rimraf dist && rollup -c",
