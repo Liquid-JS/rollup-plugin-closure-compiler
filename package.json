@@ -7,7 +7,7 @@
     ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/Liquid-JS/rollup-plugin-closure-compiler.git"
+        "url": "git+https://github.com/Liquid-JS/rollup-plugin-closure-compiler.git"
     },
     "author": "The AMP HTML Authors",
     "keywords": [
@@ -16,12 +16,14 @@
     "license": "Apache-2.0",
     "type": "module",
     "scripts": {
-        "prepare": "husky",
+        "postinstall": "husky",
         "test": "ava",
         "coverage": "c8 ava && c8 report --reporter=html",
         "build": "rimraf dist && rollup -c",
         "release": "git diff --exit-code && standard-version",
-        "prepublishOnly": "yarn build"
+        "prepublishOnly": "yarn build",
+        "prepack": "clean-package",
+        "postpack": "clean-package restore"
     },
     "peerDependencies": {
         "google-closure-compiler": "^20240317.0.0",
@@ -45,6 +47,7 @@
         "ava": "^6.2.0",
         "builtins": "^5.1.0",
         "c8": "^10.1.3",
+        "clean-package": "^2.2.0",
         "codecov": "^3.8.3",
         "eslint": "^9.17.0",
         "eslint-plugin-import": "^2.31.0",
@@ -84,5 +87,13 @@
             "types": "./dist/indes.d.ts"
         }
     },
-    "packageManager": "yarn@4.5.3"
+    "packageManager": "yarn@4.5.3",
+    "clean-package": {
+        "remove": [
+            "packageManager",
+            "scripts",
+            "devDependencies",
+            "clean-package"
+        ]
+    }
 }
