@@ -11,7 +11,7 @@ import { config, parser } from 'typescript-eslint'
 
 export default config(
     {
-        ignores: ['lib', 'node_modules', 'coverage', 'docs', '.yarn', '.husky', '**/fixtures']
+        ignores: ['lib', 'node_modules', 'coverage', 'docs', '.yarn', '.husky', 'tmp', '**/fixtures']
     },
     {
         files: ['**/*.ts', '**/*.js', '**/*.cjs'],
