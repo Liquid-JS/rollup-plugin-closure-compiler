@@ -12,6 +12,10 @@ Generally Closure Compiler will produce superior minification than other project
 
     npm install @liquid-js/rollup-plugin-closure-compiler --save-dev
 
+## API Documentation
+
+<https://liquid-js.github.io/rollup-plugin-closure-compiler/>
+
 ## Usage
 
 Invoke Closure Compiler from your Rollup configuration.
