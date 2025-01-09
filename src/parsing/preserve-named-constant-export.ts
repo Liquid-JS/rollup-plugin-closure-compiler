@@ -19,7 +19,7 @@ import MagicString from 'magic-string'
 import { ExportDetails, Range } from '../types.js'
 
 function PreserveFunction(
-    code: string,
+    _code: string,
     source: MagicString,
     ancestor: ExpressionStatement,
     exportDetails: ExportDetails,

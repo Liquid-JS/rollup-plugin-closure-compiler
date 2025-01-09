@@ -1,28 +1,27 @@
 {
-    "compileOnSave": true,
     "compilerOptions": {
-        "lib": [
-            "esnext",
-        ],
-        "outDir": "dist",
+        "strictPropertyInitialization": true,
+        "noUnusedParameters": true,
+        "skipLibCheck": true,
+        "importHelpers": false,
+        "outDir": "./lib/",
         "sourceMap": true,
-        "moduleResolution": "node",
-        "target": "es2019",
-        "baseUrl": ".",
+        "module": "esnext",
+        "target": "es2020",
         "allowJs": true,
-        "noUnusedLocals": true,
-        "strictNullChecks": true,
+        "moduleResolution": "node",
+        "declaration": true,
+        "allowSyntheticDefaultImports": true,
+        "strict": true,
         "noImplicitAny": true,
         "noImplicitThis": true,
         "alwaysStrict": true,
-        "declaration": true,
-        "module": "ESNext",
-        "allowSyntheticDefaultImports": true,
-        "incremental": true,
-    },
-    "include": [
-        "./src/**/*.ts",
-        "./src/**/*.d.ts",
-        "./test/**/*.js"
-    ]
+        "strictNullChecks": true,
+        "forceConsistentCasingInFileNames": true,
+        "noImplicitReturns": true,
+        "noUnusedLocals": true,
+        "esModuleInterop": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true
+    }
 }

@@ -26,7 +26,7 @@ import { TransformInterface } from '../../types.js'
 export default class HashbangTransform extends SourceTransform implements TransformInterface {
     name = 'HashbangTransform'
 
-    transform = async (id: string, source: MagicString): Promise<MagicString> => {
+    transform = async (_id: string, source: MagicString): Promise<MagicString> => {
         const stringified = source.trim().toString()
         const match = /^#!.*/.exec(stringified)
 

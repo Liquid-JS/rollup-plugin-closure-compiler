@@ -18,11 +18,11 @@ import test from 'ava'
 import { compile } from '../generator.js'
 
 test.serial('export * is unsupported', async (t) => {
-  try {
-    await compile('export-all', 'all-external', false, { default: {} }, 'default', 'esm')
+    try {
+        await compile('export-all', 'all-external', false, { default: {} }, 'default', 'esm')
 
-    t.fail('expected error, but passed')
-  } catch (e) {
-    t.is(e.message, 'Rollup Plugin Closure Compiler does not support export all syntax for externals.')
-  }
+        t.fail('expected error, but passed')
+    } catch (e) {
+        t.is(e.message, 'Rollup Plugin Closure Compiler does not support export all syntax for externals.')
+    }
 })

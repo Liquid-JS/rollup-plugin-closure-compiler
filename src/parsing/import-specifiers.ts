@@ -83,8 +83,7 @@ export function FormatSpecifiers(specifiers: Specifiers, name: string): string {
     if (hasSpecifics) {
         values.push(`{${specifiers.specific.join(',')}}`)
     }
-    formatted += `${hasDefault || hasNamespace ? ' ' : ''}${values.join(',')}${hasSpecifics ? '' : ' '
-        }${includesFrom ? 'from' : ''}'${name}';`
+    formatted += `${hasDefault || hasNamespace ? ' ' : ''}${values.join(',')}${hasSpecifics ? '' : ' '}${includesFrom ? 'from' : ''}'${name}';`
 
     return formatted
 }

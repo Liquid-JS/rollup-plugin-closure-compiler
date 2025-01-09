@@ -53,7 +53,7 @@ class Transform implements TransformInterface {
 export class SourceTransform extends Transform {
     name: string = 'SourceTransform'
 
-    async transform(id: string, source: MagicString): Promise<MagicString> {
+    async transform(_id: string, source: MagicString): Promise<MagicString> {
         return source
     }
 }

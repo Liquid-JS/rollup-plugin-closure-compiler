@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
+import { readFile } from 'fs/promises'
 import typescript from '@rollup/plugin-typescript'
+//@ts-ignore
 import builtins from 'builtins'
-import pkg from './package.json' with { type: 'json' }
+import { RollupOptions } from 'rollup'
 
-export default {
+const pkg = JSON.parse(await readFile('./package.json', 'utf8'))
+
+export default new Array<RollupOptions>({
     input: './src/index.ts',
     external: [
         ...builtins(),
@@ -27,18 +31,20 @@ export default {
     ],
     output: [
         {
-            file: './dist/index.mjs',
+            file: './lib/index.mjs',
             format: 'es'
         },
         {
-            file: './dist/index.cjs',
+            file: './lib/index.cjs',
             format: 'cjs'
         }
     ],
     plugins: [
         typescript({
             declaration: true,
-            declarationDir: './dist/'
+            declarationDir: './lib/',
+            inlineSources: true,
+            tsconfig: 'tsconfig.lib.json'
         })
     ]
-}
+})

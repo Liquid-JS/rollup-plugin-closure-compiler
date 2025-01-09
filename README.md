@@ -89,14 +89,6 @@ export default {
 }
 ```
 
-## Security disclosures
-
-The AMP Project accepts responsible security disclosures through the [Google Application Security program](https://www.google.com/about/appsecurity/).
-
-## Code of conduct
-
-The AMP Project strives for a positive and growing project community that provides a safe environment for everyone.  All members, committers and volunteers in the community are required to act according to the [code of conduct](.github/CODE_OF_CONDUCT.md).
-
 ## License
 
 rollup-plugin-closure-compiler is licensed under the [Apache License, Version 2.0](LICENSE).

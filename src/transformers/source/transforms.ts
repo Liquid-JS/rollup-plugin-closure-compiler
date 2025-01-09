@@ -38,7 +38,7 @@ const TRANSFORMS: Array<typeof SourceTransform> = [HashbangTransform]
  */
 export const create = (
     context: PluginContext,
-    requestedCompileOptions: CompileOptions,
+    _requestedCompileOptions: CompileOptions,
     mangler: Mangle,
     memory: Ebbinghaus,
     inputOptions: InputOptions,

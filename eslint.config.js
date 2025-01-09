@@ -1,55 +1,35 @@
-import stylistic from '@stylistic/eslint-plugin'
+// @ts-check
+import stylisticPlugin from '@stylistic/eslint-plugin'
+import typescriptEslintPlugin from '@typescript-eslint/eslint-plugin'
+// @ts-ignore
 import importPlugin from 'eslint-plugin-import'
-import jsdoc from 'eslint-plugin-jsdoc'
-import preferArrowFunctions from 'eslint-plugin-prefer-arrow-functions'
-import unusedImports from 'eslint-plugin-unused-imports'
-import { config, parser, plugin } from 'typescript-eslint'
+import jsdocPlugin from 'eslint-plugin-jsdoc'
+// @ts-ignore
+import preferArrowPlugin from 'eslint-plugin-prefer-arrow-functions'
+import unusedImportsPlugin from 'eslint-plugin-unused-imports'
+import { config, parser } from 'typescript-eslint'
 
 export default config(
     {
-        ignores: [
-            '**/node_modules',
-            '**/fixtures',
-            '.rollup.cache',
-            'dist',
-            'coverage',
-            '.yarn'
-        ]
+        ignores: ['lib', 'node_modules', 'coverage', 'docs', '.yarn', '.husky', '**/fixtures']
     },
     {
+        files: ['**/*.ts', '**/*.js', '**/*.cjs'],
+        plugins: {
+            '@typescript-eslint': typescriptEslintPlugin,
+            '@import': importPlugin,
+            '@jsdoc': jsdocPlugin,
+            '@prefer-arrow-functions': preferArrowPlugin,
+            '@unused-imports': unusedImportsPlugin,
+            '@stylistic': stylisticPlugin
+        },
         languageOptions: {
             parser,
             parserOptions: {
-                project: 'tsconfig.json',
-                tsconfigRootDir: import.meta.dirname,
-                projectService: {
-                    allowDefaultProject: ['*.config.js', '*.config.cjs']
-                }
+                project: 'tsconfig.json'
             }
         },
-        plugins: {
-            '@import': importPlugin,
-            '@jsdoc': jsdoc,
-            '@prefer-arrow-functions': preferArrowFunctions,
-            '@stylistic': stylistic,
-            '@typescript-eslint': plugin,
-            '@unused-imports': unusedImports
-        }
-    },
-    {
-        files: [
-            '**/*.ts',
-            '**/*.tsx',
-            '**/*.js',
-            '**/*.cjs',
-            '**/*.cts'
-        ],
         rules: {
-            '@typescript-eslint/no-deprecated': 'warn',
-            '@import/extensions': [
-                'error',
-                'ignorePackages'
-            ],
             '@import/no-deprecated': 'warn',
             '@import/no-extraneous-dependencies': [
                 'error',
@@ -74,9 +54,18 @@ export default config(
                     allowNamedFunctions: true,
                     classPropertiesAllowed: false,
                     disallowPrototype: true,
+                    returnStyle: 'unchanged',
                     singleReturnOnly: false
                 }
             ],
+            '@stylistic/arrow-parens': 'off',
+            '@stylistic/brace-style': ['error', '1tbs'],
+            '@stylistic/comma-dangle': 'error',
+            '@stylistic/eol-last': 'error',
+            '@stylistic/id-blacklist': 'off',
+            '@stylistic/indent': ['error', 4],
+            '@stylistic/linebreak-style': 'off',
+            '@stylistic/max-len': 'off',
             '@stylistic/member-delimiter-style': [
                 'error',
                 {
@@ -90,6 +79,16 @@ export default config(
                     }
                 }
             ],
+            '@stylistic/new-parens': 'error',
+            '@stylistic/no-multiple-empty-lines': [
+                'error',
+                {
+                    max: 1,
+                    maxBOF: 0
+                }
+            ],
+            '@stylistic/no-trailing-spaces': 'error',
+            '@stylistic/quote-props': ['error', 'consistent-as-needed'],
             '@stylistic/quotes': [
                 'error',
                 'single',
@@ -97,10 +96,16 @@ export default config(
                     avoidEscape: true
                 }
             ],
-            '@stylistic/semi': [
+            '@stylistic/semi': ['error', 'never'],
+            '@stylistic/space-before-function-paren': [
                 'error',
-                'never'
+                {
+                    anonymous: 'always',
+                    asyncArrow: 'always',
+                    named: 'never'
+                }
             ],
+            '@stylistic/space-in-parens': ['error', 'never'],
             '@stylistic/type-annotation-spacing': 'error',
             '@typescript-eslint/adjacent-overload-signatures': 'error',
             '@typescript-eslint/array-type': [
@@ -113,36 +118,16 @@ export default config(
             '@typescript-eslint/consistent-type-assertions': 'off',
             '@typescript-eslint/consistent-type-definitions': 'error',
             '@typescript-eslint/dot-notation': 'off',
-            '@typescript-eslint/explicit-member-accessibility': [
-                'error',
-                {
-                    accessibility: 'no-public'
-                }
-            ],
+            '@typescript-eslint/explicit-member-accessibility': 'off',
             '@typescript-eslint/interface-name-prefix': 'off',
             '@typescript-eslint/member-ordering': [
                 'error',
                 {
-                    default: [
-                        'public-static-field',
-                        'static-field',
-                        'instance-field'
-                    ]
+                    default: ['public-static-field', 'static-field', 'instance-field']
                 }
             ],
-            '@typescript-eslint/naming-convention': [
-                'error',
-                {
-                    custom: {
-                        match: false,
-                        regex: '^I[A-Z][a-z]'
-                    },
-                    format: [
-                        'PascalCase'
-                    ],
-                    selector: 'interface'
-                }
-            ],
+            '@typescript-eslint/naming-convention': 'off',
+            '@typescript-eslint/no-deprecated': 'error',
             '@typescript-eslint/no-empty-function': 'off',
             '@typescript-eslint/no-empty-object-type': 'off',
             '@typescript-eslint/no-explicit-any': 'off',
@@ -153,6 +138,7 @@ export default config(
             '@typescript-eslint/no-non-null-assertion': 'off',
             '@typescript-eslint/no-parameter-properties': 'off',
             '@typescript-eslint/no-redeclare': 'error',
+            '@typescript-eslint/no-require-imports': 'error',
             '@typescript-eslint/no-restricted-types': [
                 'error',
                 {
@@ -188,7 +174,6 @@ export default config(
             '@typescript-eslint/no-unused-expressions': 'off',
             '@typescript-eslint/no-unused-vars': 'off',
             '@typescript-eslint/no-use-before-define': 'off',
-            '@typescript-eslint/no-require-imports': 'error',
             '@typescript-eslint/prefer-for-of': 'error',
             '@typescript-eslint/prefer-function-type': 'error',
             '@typescript-eslint/prefer-namespace-keyword': 'error',
@@ -214,47 +199,35 @@ export default config(
                     varsIgnorePattern: '^_'
                 }
             ],
-            'arrow-body-style': 'error',
-            '@stylistic/arrow-parens': 'off',
-            '@stylistic/brace-style': [
-                'error',
-                '1tbs'
-            ],
-            '@stylistic/comma-dangle': 'error',
+            'arrow-body-style': ['error', 'as-needed'],
             'complexity': 'off',
             'constructor-super': 'error',
             'curly': 'off',
-            '@stylistic/eol-last': 'error',
-            'eqeqeq': [
-                'off',
-                'always'
-            ],
-            'guard-for-in': 'off',
-            '@stylistic/id-blacklist': 'off',
+            'eqeqeq': 'off',
             'id-match': 'off',
-            '@stylistic/linebreak-style': 'off',
             'max-classes-per-file': 'off',
-            '@stylistic/max-len': 'off',
-            '@stylistic/new-parens': 'error',
             'no-bitwise': 'off',
             'no-caller': 'error',
-            'no-cond-assign': 'error',
+            'no-cond-assign': ['error', 'except-parens'],
             'no-console': 'off',
             'no-debugger': 'error',
             'no-duplicate-case': 'error',
-            'no-duplicate-imports': 'error',
+            'no-duplicate-imports': [
+                'error',
+                {
+                    includeExports: false
+                }
+            ],
             'no-empty': 'off',
-            'no-eval': 'error',
+            'no-eval': [
+                'error',
+                {
+                    allowIndirect: false
+                }
+            ],
             'no-extra-bind': 'error',
             'no-fallthrough': 'off',
             'no-invalid-this': 'off',
-            '@stylistic/no-multiple-empty-lines': [
-                'error',
-                {
-                    max: 1,
-                    maxBOF: 0
-                }
-            ],
             'no-new-func': 'error',
             'no-new-wrappers': 'error',
             'no-redeclare': 'off',
@@ -266,11 +239,15 @@ export default config(
                 }
             ],
             'no-return-await': 'error',
-            'no-sequences': 'error',
+            'no-sequences': [
+                'error',
+                {
+                    allowInParentheses: true
+                }
+            ],
             'no-sparse-arrays': 'error',
             'no-template-curly-in-string': 'error',
             'no-throw-literal': 'error',
-            '@stylistic/no-trailing-spaces': 'error',
             'no-undef-init': 'error',
             'no-underscore-dangle': 'off',
             'no-unsafe-finally': 'error',
@@ -278,50 +255,41 @@ export default config(
             'no-unused-vars': 'off',
             'no-var': 'error',
             'object-shorthand': 'error',
-            'one-var': [
-                'error',
-                'never'
-            ],
-            'prefer-const': 'error',
-            'prefer-object-spread': 'error',
-            '@stylistic/quote-props': [
-                'error',
-                'consistent-as-needed'
-            ],
-            '@stylistic/quotes': 'off',
-            'radix': 'error',
-            'sort-keys': 'off',
-            '@stylistic/space-before-function-paren': [
+            'one-var': ['error', 'never'],
+            'prefer-const': [
                 'error',
                 {
-                    anonymous: 'always',
-                    asyncArrow: 'always',
-                    named: 'never'
+                    destructuring: 'any',
+                    ignoreReadBeforeAssign: false
                 }
             ],
-            '@stylistic/space-in-parens': [
+            'prefer-object-spread': 'error',
+            'radix': ['error', 'always'],
+            'sort-keys': 'off',
+            'use-isnan': [
                 'error',
-                'never'
+                {
+                    enforceForIndexOf: false,
+                    enforceForSwitchCase: true
+                }
             ],
-            'use-isnan': 'error',
             'valid-typeof': 'off'
         }
     },
     {
-        files: [
-            '*.config.js',
-            '*.config.cjs',
-            '*.config.ts',
-            '*.config.cts',
-            'test/**/*.js'
-        ],
+        files: ['**/*.test.ts', '**/*.test.js', '**/*.config.js', '**/*.config.ts', '**/*.config.cjs', 'test/*.cjs'],
         rules: {
             '@import/no-extraneous-dependencies': [
                 'off',
                 {
                     devDependencies: false
                 }
-            ],
+            ]
+        }
+    },
+    {
+        files: ['**/*.cjs'],
+        rules: {
             '@typescript-eslint/no-require-imports': 'off'
         }
     }

@@ -16,30 +16,30 @@
 
 import * as path from 'path'
 import {
-  generator,
-  DEFAULT_CLOSURE_OPTIONS,
-  PRETTY_PRINT_CLOSURE_OPTIONS,
-  ADVANCED_CLOSURE_OPTIONS,
-  ES5_STRICT_CLOSURE_OPTIONS
+    generator,
+    DEFAULT_CLOSURE_OPTIONS,
+    PRETTY_PRINT_CLOSURE_OPTIONS,
+    ADVANCED_CLOSURE_OPTIONS,
+    ES5_STRICT_CLOSURE_OPTIONS
 } from '../generator.js'
 
 const EXTERNS = path.resolve('test', 'provided-externs', 'fixtures', 'class.externs.js')
 
 generator('provided-externs', 'class', false, undefined, {
-  default: {
-    ...DEFAULT_CLOSURE_OPTIONS.default,
-    externs: EXTERNS
-  },
-  pretty: {
-    ...PRETTY_PRINT_CLOSURE_OPTIONS.pretty,
-    externs: EXTERNS
-  },
-  advanced: {
-    ...ADVANCED_CLOSURE_OPTIONS.advanced,
-    externs: EXTERNS
-  },
-  es5: {
-    ...ES5_STRICT_CLOSURE_OPTIONS.es5,
-    externs: EXTERNS
-  }
+    default: {
+        ...DEFAULT_CLOSURE_OPTIONS.default,
+        externs: EXTERNS
+    },
+    pretty: {
+        ...PRETTY_PRINT_CLOSURE_OPTIONS.pretty,
+        externs: EXTERNS
+    },
+    advanced: {
+        ...ADVANCED_CLOSURE_OPTIONS.advanced,
+        externs: EXTERNS
+    },
+    es5: {
+        ...ES5_STRICT_CLOSURE_OPTIONS.es5,
+        externs: EXTERNS
+    }
 })

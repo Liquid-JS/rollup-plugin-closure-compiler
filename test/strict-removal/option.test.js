@@ -15,12 +15,12 @@
  */
 
 import {
-  generator,
-  DEFAULT_CLOSURE_OPTIONS
+    generator,
+    DEFAULT_CLOSURE_OPTIONS
 } from '../generator.js'
 
 const closureOptions = {
-  default: { ...DEFAULT_CLOSURE_OPTIONS.default, remove_strict_directive: true}
+    default: { ...DEFAULT_CLOSURE_OPTIONS.default, remove_strict_directive: true }
 }
 
 generator('strict-removal', 'option', undefined, ['iife'], closureOptions)

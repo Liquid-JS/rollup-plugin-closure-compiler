@@ -29,7 +29,7 @@ export default class HashbangApplyTransform extends ChunkTransform implements Tr
     /**
      * @param source MagicString of source to process post Closure Compilation.
      */
-    async post(fileName: string, source: MagicString): Promise<MagicString> {
+    async post(_fileName: string, source: MagicString): Promise<MagicString> {
         if (this.memory.hashbang === null) {
             return source
         }
