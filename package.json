@@ -2,29 +2,22 @@
     "name": "@liquid-js/rollup-plugin-closure-compiler",
     "version": "0.27.7",
     "description": "Rollup + Google Closure Compiler",
+    "type": "module",
+    "main": "./lib/index.mjs",
+    "types": "./lib/index.d.ts",
+    "exports": {
+        "./package.json": {
+            "default": "./package.json"
+        },
+        ".": {
+            "types": "./lib/index.d.ts",
+            "require": "./lib/index.cjs",
+            "import": "./lib/index.mjs"
+        }
+    },
     "files": [
         "lib"
     ],
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/Liquid-JS/rollup-plugin-closure-compiler.git"
-    },
-    "author": "The AMP HTML Authors",
-    "keywords": [
-        "rollup-plugin"
-    ],
-    "license": "Apache-2.0",
-    "type": "module",
-    "scripts": {
-        "postinstall": "husky",
-        "test": "ava",
-        "coverage": "c8 ava && c8 report --reporter=html",
-        "build": "rimraf lib && cross-env NODE_OPTIONS=--inspect rollup -c rollup.config.ts --configPlugin @rollup/plugin-typescript",
-        "release": "git diff --exit-code && standard-version",
-        "prepublishOnly": "yarn build",
-        "prepack": "clean-package",
-        "postpack": "clean-package restore"
-    },
     "peerDependencies": {
         "google-closure-compiler": "^20240317.0.0",
         "rollup": ">=4.30"
@@ -49,6 +42,7 @@
         "c8": "^10.1.3",
         "clean-package": "^2.2.0",
         "codecov": "^3.8.3",
+        "commit-and-tag-version": "^12.5.0",
         "cross-env": "^7.0.3",
         "eslint": "^9.17.0",
         "eslint-plugin-import": "^2.31.0",
@@ -58,25 +52,38 @@
         "google-closure-compiler": "20210808.0.0",
         "husky": "^9.1.7",
         "npm-check-updates": "^17.1.13",
-        "npm-run-all": "^4.1.5",
         "rimraf": "^6.0.1",
-        "rollup": "^4.28.1",
-        "standard-version": "^9.5.0",
+        "rollup": "^4.30.1",
         "ts-node-maintained": "^10.9.4",
+        "typedoc": "^0.27.6",
         "typescript": "^5.7.3",
         "typescript-eslint": "^8.19.1"
     },
-    "publishConfig": {
-        "access": "public"
+    "scripts": {
+        "build": "rimraf lib && rollup -c rollup.config.ts --configPlugin @rollup/plugin-typescript",
+        "test": "ava",
+        "coverage": "c8 ava && c8 report --reporter=html",
+        "lint": "eslint . --fix",
+        "prepublishOnly": "npm run build",
+        "prepare": "husky",
+        "release": "git diff --exit-code && commit-and-tag-version && git push --follow-tags origin",
+        "docs": "typedoc",
+        "prepack": "clean-package",
+        "postpack": "clean-package restore"
     },
-    "types": "./lib/index.d.ts",
-    "exports": {
-        ".": {
-            "types": "./lib/index.d.ts",
-            "require": "./lib/index.cjs",
-            "import": "./lib/index.mjs"
-        }
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Liquid-JS/rollup-plugin-closure-compiler.git"
     },
+    "keywords": [
+        "rollup-plugin"
+    ],
+    "author": "HitkoDev <development@hitko.si>",
+    "license": "Apache-2.0",
+    "bugs": {
+        "url": "https://github.com/Liquid-JS/rollup-plugin-closure-compiler/issues"
+    },
+    "homepage": "https://liquid-js.github.io/rollup-plugin-closure-compiler/",
     "packageManager": "yarn@4.6.0",
     "clean-package": {
         "remove": [

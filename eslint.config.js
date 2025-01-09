@@ -26,7 +26,10 @@ export default config(
         languageOptions: {
             parser,
             parserOptions: {
-                project: 'tsconfig.json'
+                project: 'tsconfig.json',
+                projectService: {
+                    allowDefaultProject: ['.*']
+                }
             }
         },
         rules: {

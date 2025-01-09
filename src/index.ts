@@ -15,7 +15,7 @@
  */
 
 import { promises as fsPromises } from 'fs'
-import { CompileOptions } from 'google-closure-compiler'
+import { CompileOptions, CompileOption } from 'google-closure-compiler'
 import { InputOptions, OutputOptions, Plugin, PluginContext, RenderedChunk, TransformResult } from 'rollup'
 import compiler from './compiler.js'
 import options from './options.js'
@@ -24,6 +24,11 @@ import { create as createChunkTransforms, preCompilation } from './transformers/
 import { Ebbinghaus } from './transformers/ebbinghaus.js'
 import { Mangle } from './transformers/mangle.js'
 import { create as createSourceTransforms, transform as sourceTransform } from './transformers/source/transforms.js'
+
+export {
+    CompileOptions,
+    CompileOption
+}
 
 export default function closureCompiler(requestedCompileOptions: CompileOptions = {}): Plugin {
     const mangler: Mangle = new Mangle()
