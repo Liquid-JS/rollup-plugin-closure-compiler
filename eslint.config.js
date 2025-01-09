@@ -283,9 +283,9 @@ export default config(
         files: ['**/*.test.ts', '**/*.test.js', '**/*.config.js', '**/*.config.ts', '**/*.config.cjs', 'test/*.cjs'],
         rules: {
             '@import/no-extraneous-dependencies': [
-                'off',
+                'error',
                 {
-                    devDependencies: false
+                    devDependencies: true
                 }
             ]
         }
