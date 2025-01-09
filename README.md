@@ -10,7 +10,7 @@ Generally Closure Compiler will produce superior minification than other project
 
 ## Installation
 
-    npm install @liquid-js/rollup-plugin-closure-compiler --save-dev
+    npm install @liquid-js/rollup-plugin-closure-compiler
 
 ## API Documentation
 
@@ -94,3 +94,7 @@ export default {
     ]
 }
 ```
+
+## License
+
+[Apache-2.0 License](https://github.com/Liquid-JS/rollup-plugin-closure-compiler/blob/master/LICENSE)
