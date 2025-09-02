@@ -1,4 +1,3 @@
-
 export function exported(){
-  import("./dynamic-imported-v6bREfOY.js").then(a => a.handleImport());
+  import("./dynamic-imported-CNp1w3Qj.js").then(a => a.handleImport());
 }

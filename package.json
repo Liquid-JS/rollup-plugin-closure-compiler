@@ -11,7 +11,6 @@
         },
         ".": {
             "types": "./lib/index.d.ts",
-            "require": "./lib/index.cjs",
             "import": "./lib/index.mjs"
         }
     },
@@ -19,45 +18,46 @@
         "lib"
     ],
     "peerDependencies": {
-        "google-closure-compiler": "^20240317.0.0",
-        "rollup": ">=4.30"
+        "google-closure-compiler": "^20250820.0.0",
+        "rollup": ">=4.50"
     },
     "dependencies": {
         "@ampproject/remapping": "^2.3.0",
-        "acorn": "^8.14.0",
+        "acorn": "^8.15.0",
         "acorn-walk": "^8.3.4",
         "estree-walker": "^3.0.3",
-        "magic-string": "^0.30.17"
+        "magic-string": "^0.30.18"
     },
     "devDependencies": {
-        "@commitlint/cli": "^19.6.1",
-        "@commitlint/config-conventional": "^19.6.0",
-        "@rollup/plugin-typescript": "^12.1.2",
-        "@stylistic/eslint-plugin": "^2.12.1",
-        "@types/estree": "^1.0.6",
+        "@commitlint/cli": "^19.8.1",
+        "@commitlint/config-conventional": "^19.8.1",
+        "@rollup/plugin-typescript": "^12.1.4",
+        "@stylistic/eslint-plugin": "^5.3.1",
+        "@types/estree": "^1.0.8",
         "@types/google-closure-compiler": "^20231112.0.0",
-        "@types/node": "<23.0.0",
-        "ava": "^6.2.0",
+        "@types/node": "<25.0.0",
+        "ava": "^6.4.1",
         "builtins": "^5.1.0",
         "c8": "^10.1.3",
         "clean-package": "^2.2.0",
         "codecov": "^3.8.3",
-        "commit-and-tag-version": "^12.5.0",
-        "cross-env": "^7.0.3",
-        "eslint": "^9.17.0",
-        "eslint-plugin-import": "^2.31.0",
-        "eslint-plugin-jsdoc": "^50.6.1",
-        "eslint-plugin-prefer-arrow-functions": "^3.6.0",
-        "eslint-plugin-unused-imports": "^4.1.4",
-        "google-closure-compiler": "20210808.0.0",
+        "commit-and-tag-version": "^12.6.0",
+        "cross-env": "^10.0.0",
+        "eslint": "^9.34.0",
+        "eslint-plugin-import": "^2.32.0",
+        "eslint-plugin-jsdoc": "^54.2.1",
+        "eslint-plugin-prefer-arrow-functions": "^3.6.2",
+        "eslint-plugin-unused-imports": "^4.2.0",
+        "google-closure-compiler": "20250820.0.0",
         "husky": "^9.1.7",
-        "npm-check-updates": "^17.1.13",
+        "npm-check-updates": "^18.0.3",
         "rimraf": "^6.0.1",
-        "rollup": "^4.30.1",
-        "ts-node-maintained": "^10.9.4",
-        "typedoc": "^0.27.6",
-        "typescript": "^5.7.3",
-        "typescript-eslint": "^8.19.1"
+        "rollup": "^4.50.0",
+        "ts-node-maintained": "^10.9.6",
+        "tslib": "^2.8.1",
+        "typedoc": "^0.28.12",
+        "typescript": "^5.9.2",
+        "typescript-eslint": "^8.42.0"
     },
     "scripts": {
         "build": "rimraf lib && rollup -c rollup.config.ts --configPlugin @rollup/plugin-typescript",
@@ -84,7 +84,7 @@
         "url": "https://github.com/Liquid-JS/rollup-plugin-closure-compiler/issues"
     },
     "homepage": "https://liquid-js.github.io/rollup-plugin-closure-compiler/",
-    "packageManager": "yarn@4.6.0",
+    "packageManager": "yarn@4.9.4",
     "clean-package": {
         "remove": [
             "packageManager",

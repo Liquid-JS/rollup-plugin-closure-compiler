@@ -33,10 +33,6 @@ export default new Array<RollupOptions>({
         {
             file: './lib/index.mjs',
             format: 'es'
-        },
-        {
-            file: './lib/index.cjs',
-            format: 'cjs'
         }
     ],
     plugins: [

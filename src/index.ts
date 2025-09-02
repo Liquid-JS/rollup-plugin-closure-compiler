@@ -15,7 +15,7 @@
  */
 
 import { promises as fsPromises } from 'fs'
-import { CompileOptions, CompileOption } from 'google-closure-compiler'
+import { type CompileOptions, type CompileOption } from 'google-closure-compiler'
 import { InputOptions, OutputOptions, Plugin, PluginContext, RenderedChunk, TransformResult } from 'rollup'
 import compiler from './compiler.js'
 import options from './options.js'

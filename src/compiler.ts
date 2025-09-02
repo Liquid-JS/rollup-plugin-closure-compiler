@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import gcc, { CompileOptions } from 'google-closure-compiler'
-const { compiler } = gcc
+import { compiler, CompileOptions } from 'google-closure-compiler'
+//const { compiler } = gcc
 //@ts-ignore
 import * as gccUtils from 'google-closure-compiler/lib/utils.js'
 import { RenderedChunk } from 'rollup'

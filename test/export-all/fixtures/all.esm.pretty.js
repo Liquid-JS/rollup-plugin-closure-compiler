@@ -1,4 +1,3 @@
-
 var export1=1;
 function export2(){
   return 2;

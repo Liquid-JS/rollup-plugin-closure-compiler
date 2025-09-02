@@ -1,4 +1,3 @@
-
 class b {
   constructor(a) {
     this.name_ = a;
