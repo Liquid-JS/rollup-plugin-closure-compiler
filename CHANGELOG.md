@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.28.0](https://github.com/Liquid-JS/rollup-plugin-closure-compiler/compare/v0.27.8...v0.28.0) (2025-09-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* drop commonjs support
+
+### Features
+
+* update for Node 22+, drop commonjs import ([4084755](https://github.com/Liquid-JS/rollup-plugin-closure-compiler/commit/4084755ef707164b0d081cba760f49a84073f2bb))
+
 ## [0.27.8](https://github.com/Liquid-JS/rollup-plugin-closure-compiler/compare/v0.27.7...v0.27.8) (2025-01-09)
 
 
