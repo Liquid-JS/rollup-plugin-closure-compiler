@@ -3,6 +3,7 @@
     "upgrade": true,
     "interactive": true,
     "reject": [
-        "@types/node"
+        "@types/node",
+        "google-closure-compiler"
     ]
 }

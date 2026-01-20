@@ -24,14 +24,14 @@ declare module 'acorn-walk' {
     type FullWalkerCallback<TState> = (
         node: import('estree').Node,
         state: TState,
-        type: NodeType,
+        type: NodeType
     ) => void
 
     type FullAncestorWalkerCallback<TState> = (
         node: import('estree').Node,
         state: TState | Array<import('estree').Node>,
         ancestors: Array<import('estree').Node>,
-        type: NodeType,
+        type: NodeType
     ) => void
     type WalkerCallback<TState> = (node: import('estree').Node, state: TState) => void
 
@@ -40,13 +40,13 @@ declare module 'acorn-walk' {
     type AncestorWalkerFn<K extends NodeType, TState> = (
         node: NarrowNode<K>,
         state: TState | Array<import('estree').Node>,
-        ancestors: Array<import('estree').Node>,
+        ancestors: Array<import('estree').Node>
     ) => void
 
     type RecursiveWalkerFn<K extends NodeType, TState> = (
         node: NarrowNode<K>,
         state: TState,
-        callback: WalkerCallback<TState>,
+        callback: WalkerCallback<TState>
     ) => void
 
     type SimpleVisitors<Types extends NodeType, TState> = {
@@ -72,40 +72,40 @@ declare module 'acorn-walk' {
         node: import('estree').Node,
         visitors: SimpleVisitors<K, TState>,
         base?: RecursiveVisitors<NodeType, TState>,
-        state?: TState,
+        state?: TState
     ): void
 
     export function ancestor<TState, K extends NodeType>(
         node: import('estree').Node,
         visitors: AncestorVisitors<K, TState>,
         base?: RecursiveVisitors<NodeType, TState>,
-        state?: TState,
+        state?: TState
     ): void
 
     export function recursive<TState, K extends NodeType>(
         node: import('estree').Node,
         state: TState,
         functions: RecursiveVisitors<K, TState>,
-        base?: RecursiveVisitors<NodeType, TState>,
+        base?: RecursiveVisitors<NodeType, TState>
     ): void
 
     export function full<TState>(
         node: import('estree').Node,
         callback: FullWalkerCallback<TState>,
         base?: RecursiveVisitors<NodeType, TState>,
-        state?: TState,
+        state?: TState
     ): void
 
     export function fullAncestor<TState>(
         node: import('estree').Node,
         callback: FullAncestorWalkerCallback<TState>,
         base?: RecursiveVisitors<NodeType, TState>,
-        state?: TState,
+        state?: TState
     ): void
 
     export function make<TState, K extends NodeType>(
         functions: RecursiveVisitors<K, TState>,
-        base?: RecursiveVisitors<NodeType, TState>,
+        base?: RecursiveVisitors<NodeType, TState>
     ): RecursiveVisitors<NodeType, TState>
 
     export function findNodeAt<TState, K extends NodeType>(
@@ -114,7 +114,7 @@ declare module 'acorn-walk' {
         end: number | undefined,
         type: K,
         base?: RecursiveVisitors<NodeType, TState>,
-        state?: TState,
+        state?: TState
     ): Found<K, TState> | undefined
 
     export function findNodeAt<TState>(
@@ -123,7 +123,7 @@ declare module 'acorn-walk' {
         end: number | undefined,
         type?: FindPredicate,
         base?: RecursiveVisitors<NodeType, TState>,
-        state?: TState,
+        state?: TState
     ): Found<NodeType, TState> | undefined
 
     export const findNodeAround: typeof findNodeAt
