@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.28.1](https://github.com/Liquid-JS/rollup-plugin-closure-compiler/compare/v0.28.0...v0.28.1) (2026-01-20)
+
 ## [0.28.0](https://github.com/Liquid-JS/rollup-plugin-closure-compiler/compare/v0.27.8...v0.28.0) (2025-09-02)
 
 
