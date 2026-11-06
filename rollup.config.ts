@@ -18,21 +18,24 @@ import { readFile } from 'fs/promises'
 import typescript from '@rollup/plugin-typescript'
 //@ts-ignore
 import builtins from 'builtins'
-import { RollupOptions } from 'rollup'
+import type { RollupOptions } from 'rollup'
 
 const pkg = JSON.parse(await readFile('./package.json', 'utf8'))
+const externals = [
+    ...builtins(),
+    ...Object.keys(pkg.dependencies || {}),
+    ...Object.keys(pkg.peerDependencies || {})
+]
 
 export default new Array<RollupOptions>({
     input: './src/index.ts',
-    external: [
-        ...builtins(),
-        ...Object.keys(pkg.dependencies || {}),
-        ...Object.keys(pkg.peerDependencies || {})
-    ],
+    // the dependencies and their subpaths, like google-closure-compiler/lib/utils.js
+    external: (id) => externals.some((name) => id === name || id.startsWith(`${name}/`)),
     output: [
         {
             file: './lib/index.mjs',
-            format: 'es'
+            format: 'es',
+            sourcemap: true
         }
     ],
     plugins: [

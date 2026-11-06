@@ -88,7 +88,7 @@ export class Mangle {
         let insideNamedExport: boolean = false
 
         await walk(program, {
-            async enter(node: BaseNode) {
+            enter: async (node: BaseNode) => {
                 const currentlyRewriteable = mangleable[mangleable.length - 1]
                 if (isBlockStatement(node)) {
                     mangleable.push(new Set(currentlyRewriteable))
@@ -107,7 +107,7 @@ export class Mangle {
                     source.overwrite(start, end, getMangledName(node.name) || node.name)
                 }
             },
-            async leave(node: BaseNode) {
+            leave: async (node: BaseNode) => {
                 if (isBlockStatement(node)) {
                     mangleable.pop()
                 }

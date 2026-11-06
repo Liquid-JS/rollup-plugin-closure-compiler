@@ -35,7 +35,7 @@ export default class ConstTransform extends ChunkTransform {
         const program = await parse(fileName, code)
 
         walk.simple(program, {
-            VariableDeclaration(node: VariableDeclaration) {
+            VariableDeclaration: (node: VariableDeclaration) => {
                 const [start, end]: Range = node.range as Range
                 if (node.kind === 'const') {
                     source.overwrite(start, end, code.substring(start, end).replace('const', 'let'))

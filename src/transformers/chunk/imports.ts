@@ -159,21 +159,25 @@ window['${DYNAMIC_IMPORT_REPLACEMENT}'] = ${DYNAMIC_IMPORT_REPLACEMENT};`
      * @return Promise containing the repaired source
      */
     async post(fileName: string, source: MagicString): Promise<MagicString> {
-        const code = source.toString()
-        const program = await parse(fileName, code)
+        const importsSyntax = Object.values(this.importedExternalsSyntax)
 
-        for (const importedExternalSyntax of Object.values(this.importedExternalsSyntax)) {
-            source.prepend(importedExternalSyntax)
+        if (this.dynamicImportPresent) {
+            const prefix = importsSyntax.slice().reverse().join('')
+            const program = await parse(fileName, prefix + source.toString())
+
+            walk.simple(program, {
+                Identifier: (node: Identifier) => {
+                    if (node.name === DYNAMIC_IMPORT_REPLACEMENT) {
+                        const [start, end] = node.range as Range
+                        source.overwrite(start - prefix.length, end - prefix.length, DYNAMIC_IMPORT_KEYWORD)
+                    }
+                }
+            })
         }
 
-        walk.simple(program, {
-            Identifier(node: Identifier) {
-                if (node.name === DYNAMIC_IMPORT_REPLACEMENT) {
-                    const [start, end] = node.range as Range
-                    source.overwrite(start, end, DYNAMIC_IMPORT_KEYWORD)
-                }
-            }
-        })
+        for (const importedExternalSyntax of importsSyntax) {
+            source.prepend(importedExternalSyntax)
+        }
 
         return source
     }

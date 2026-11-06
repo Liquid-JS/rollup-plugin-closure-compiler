@@ -39,7 +39,7 @@ export default class LiteralComputedKeys extends ChunkTransform implements Trans
         const program = await parse(fileName, source.toString())
 
         walk.simple(program, {
-            ObjectExpression(node: ObjectExpression) {
+            ObjectExpression: (node: ObjectExpression) => {
                 for (const property of node.properties) {
                     if (isProperty(property) && property.computed && property.key.type === 'Literal') {
                         const [propertyStart]: Range = property.range as Range

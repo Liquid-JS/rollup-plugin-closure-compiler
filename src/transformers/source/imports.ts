@@ -55,7 +55,7 @@ export class ImportTransform extends SourceTransform {
         // 1. Identify all imports and rename them to indicate where they come from.
         // 2. Find usages of those imports and rename them.
         await walk(program, {
-            async enter(node) {
+            enter: async (node) => {
                 if (isImportDeclaration(node)) {
                     await mangle(node, id)
                 }

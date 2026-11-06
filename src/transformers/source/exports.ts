@@ -42,7 +42,7 @@ export class ExportTransform extends SourceTransform {
         // 2. Mangle all internal references
         const exportDetails: ExportDetails[] = []
         await estreeWalk(program, {
-            async enter(node: BaseNode) {
+            enter: async (node: BaseNode) => {
                 if (isExportNamedDeclaration(node)) {
                     exportDetails.push(...NamedDeclaration(node))
                 } else if (isExportDefaultDeclaration(node)) {

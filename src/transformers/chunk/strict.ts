@@ -61,7 +61,7 @@ export default class StrictTransform extends ChunkTransform implements Transform
             const program = await parse(fileName, source.toString())
 
             walk.simple(program, {
-                ExpressionStatement(node: ExpressionStatement) {
+                ExpressionStatement: (node: ExpressionStatement) => {
                     const { type, value } = node.expression as SimpleLiteral
                     const range: Range = node.range as Range
 
