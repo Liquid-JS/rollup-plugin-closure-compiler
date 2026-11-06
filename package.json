@@ -1,6 +1,6 @@
 {
     "name": "@liquid-js/rollup-plugin-closure-compiler",
-    "version": "0.28.2",
+    "version": "0.28.3",
     "description": "Rollup + Google Closure Compiler",
     "type": "module",
     "main": "./lib/index.mjs",
